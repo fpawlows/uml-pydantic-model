@@ -1,4 +1,3 @@
-import pprint
 import json
 from typing import List, Optional, Union
 from pydantic import BaseModel, Field, model_serializer
@@ -32,26 +31,42 @@ class UmlAssociationDirectionEnum(str, Enum):
     DIRECTED = "directed"
 
 
+class UmlInteractionOperatorEnum(str, Enum):
+    ALT = "alt"
+    BREAK = "break"
+    CRITICAL = "critical"
+    ELSE = "else"
+    IGNORE = "ignore"
+    LOOP = "loop"
+    PAR = "par"
+    STRICT = "strict"
+    NEG = "neg"
+    ASSERT = "assert"
+    REF = "ref"
+    SEQ = "seq"
+    SD = "sd"
+    OPT = "opt"
+
+
 class UmlElement(BaseModel):
     id: str
-
 
 class UmlNamedElement(UmlElement):
     name: Optional[str]
 
 class UmlAttribute(BaseModel):
     name: str
-    type: str
+    type: UmlIdReference  # Reference to UmlPrimitiveType, UmlClass, UmlInterface, UmlDataType, or UmlEnumeration id
     visibility: UmlVisibilityEnum = UmlVisibilityEnum.PUBLIC
 
 class UmlParameter(BaseModel):
     name: str
-    type: str
+    type: UmlIdReference  # Reference to UmlPrimitiveType, UmlClass, UmlInterface, UmlDataType, or UmlEnumeration id
 
 class UmlOperation(BaseModel):
     name: str
     parameters: List[UmlParameter] = Field(default_factory=list)
-    return_type: Optional[str]
+    return_type: Optional[UmlIdReference]  # Reference to UmlPrimitiveType, UmlClass, UmlInterface, UmlDataType, or UmlEnumeration id
     visibility: UmlVisibilityEnum = UmlVisibilityEnum.PUBLIC
 
 class UmlAssociationEnd(BaseModel):
@@ -63,7 +78,7 @@ class UmlAssociationEnd(BaseModel):
 class UmlClass(UmlNamedElement):
     attributes: List[UmlAttribute] = Field(default_factory=list)
     operations: List[UmlOperation] = Field(default_factory=list)
-    super_classes: List[UmlIdReference] = Field(default_factory=list)  # References to UmlGeneralization ids
+    super_classes: List[UmlIdReference] = Field(default_factory=list)  # References to UmlClass ids
     interfaces: List[UmlIdReference] = Field(default_factory=list)  # References to UmlInterface ids
 
 class UmlInterface(UmlNamedElement):
@@ -75,13 +90,16 @@ class UmlDataType(UmlNamedElement):
 class UmlEnumeration(UmlNamedElement):
     literals: List[str] = Field(default_factory=list)
 
+class UmlPrimitiveType(UmlNamedElement):
+    pass
+
 class UmlGeneralization(UmlNamedElement):
-    specific: UmlIdReference  # Reference to UmlClass Umlid
-    general: UmlIdReference  # Reference to UmlClass Umlid
+    specific: UmlIdReference  # Reference to UmlClass id
+    general: UmlIdReference  # Reference to UmlClass id
 
 class UmlDependency(UmlNamedElement):
-    client: UmlIdReference  # Reference to Classifier id
-    supplier: UmlIdReference  # Reference to Classifier id
+    client: UmlIdReference  # Reference to UmlClass or UmlInterface id
+    supplier: UmlIdReference  # Reference to UmlClass or UmlInterface id
 
 class UmlAssociation(UmlNamedElement):
     end1: UmlAssociationEnd
@@ -92,8 +110,8 @@ class UmlAssociation(UmlNamedElement):
 class UmlMessage(BaseModel):
     id: str
     name: Optional[str]
-    sender: UmlIdReference  # Reference to InteractionParticipant id
-    receiver: UmlIdReference  # Reference to InteractionParticipant id
+    sender: UmlIdReference  # Reference to UmlLifeline id
+    receiver: UmlIdReference  # Reference to UmlLifeline id
     content: str
     timestamp: str
 
@@ -102,7 +120,7 @@ class UmlFragment(BaseModel):
     name: Optional[str]
     type: str
     interaction_operator: str
-    covered: List[UmlIdReference] = Field(default_factory=list)  # References to InteractionParticipant ids
+    covered: List[UmlIdReference] = Field(default_factory=list)  # References to UmlLifeline ids
     messages: List[UmlMessage] = Field(default_factory=list)
 
 class UmlOperand(BaseModel):
@@ -114,7 +132,7 @@ class UmlOperand(BaseModel):
 class UmlInteraction(BaseModel):
     id: str
     name: Optional[str]
-    participants: List[UmlIdReference] = Field(default_factory=list)  # References to UmlClass, UmlInterface, or UmlDataType ids
+    lifelines: List[UmlIdReference] = Field(default_factory=list)  # References to UmlLifeline ids
     messages: List[UmlMessage] = Field(default_factory=list)
     fragments: List[UmlFragment] = Field(default_factory=list)
     operands: List[UmlOperand] = Field(default_factory=list)
@@ -124,16 +142,17 @@ class UmlModelElements(BaseModel):
     interfaces: List[UmlInterface] = Field(default_factory=list)
     dataTypes: List[UmlDataType] = Field(default_factory=list)
     enumerations: List[UmlEnumeration] = Field(default_factory=list)
+    primitiveTypes: List[UmlPrimitiveType] = Field(default_factory=list)
     associations: List[UmlAssociation] = Field(default_factory=list)
     generalizations: List[UmlGeneralization] = Field(default_factory=list)
     dependencies: List[UmlDependency] = Field(default_factory=list)
     interactions: List[UmlInteraction] = Field(default_factory=list)
 
-
 class UmlModel(BaseModel):
     elements: UmlModelElements
 
 
+# Example usage
 model = UmlModel(
     elements=UmlModelElements(
         classes=[
