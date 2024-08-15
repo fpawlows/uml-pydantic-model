@@ -41,7 +41,6 @@
         }
       },
       "required": [
-        "id",
         "name",
         "end1",
         "end2"
@@ -59,6 +58,10 @@
     },
     "UmlAssociationEnd": {
       "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
         "role": {
           "anyOf": [
             {
@@ -79,7 +82,27 @@
           "default": "1"
         },
         "object": {
-          "$ref": "#/$defs/UmlIdReference"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlPrimitiveType"
+            },
+            {
+              "$ref": "#/$defs/UmlClass"
+            },
+            {
+              "$ref": "#/$defs/UmlInterface"
+            },
+            {
+              "$ref": "#/$defs/UmlDataType"
+            },
+            {
+              "$ref": "#/$defs/UmlEnumeration"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Object"
         },
         "navigability": {
           "default": true,
@@ -105,13 +128,43 @@
     },
     "UmlAttribute": {
       "properties": {
-        "name": {
-          "title": "Name",
+        "id": {
+          "title": "Id",
           "type": "string"
         },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        },
         "type": {
-          "title": "Type",
-          "type": "string"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlPrimitiveType"
+            },
+            {
+              "$ref": "#/$defs/UmlClass"
+            },
+            {
+              "$ref": "#/$defs/UmlInterface"
+            },
+            {
+              "$ref": "#/$defs/UmlDataType"
+            },
+            {
+              "$ref": "#/$defs/UmlEnumeration"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Type"
         },
         "visibility": {
           "allOf": [
@@ -176,7 +229,6 @@
         }
       },
       "required": [
-        "id",
         "name"
       ],
       "title": "UmlClass",
@@ -201,7 +253,6 @@
         }
       },
       "required": [
-        "id",
         "name"
       ],
       "title": "UmlDataType",
@@ -232,7 +283,6 @@
         }
       },
       "required": [
-        "id",
         "name",
         "client",
         "supplier"
@@ -266,7 +316,6 @@
         }
       },
       "required": [
-        "id",
         "name"
       ],
       "title": "UmlEnumeration",
@@ -313,7 +362,6 @@
         }
       },
       "required": [
-        "id",
         "name",
         "type",
         "interaction_operator"
@@ -346,7 +394,6 @@
         }
       },
       "required": [
-        "id",
         "name",
         "specific",
         "general"
@@ -356,13 +403,13 @@
     },
     "UmlIdReference": {
       "properties": {
-        "id": {
-          "title": "Id",
+        "idref": {
+          "title": "Idref",
           "type": "string"
         }
       },
       "required": [
-        "id"
+        "idref"
       ],
       "title": "UmlIdReference",
       "type": "object"
@@ -384,11 +431,11 @@
           ],
           "title": "Name"
         },
-        "participants": {
+        "lifelines": {
           "items": {
             "$ref": "#/$defs/UmlIdReference"
           },
-          "title": "Participants",
+          "title": "Lifelines",
           "type": "array"
         },
         "messages": {
@@ -414,7 +461,6 @@
         }
       },
       "required": [
-        "id",
         "name"
       ],
       "title": "UmlInteraction",
@@ -446,7 +492,6 @@
         }
       },
       "required": [
-        "id",
         "name"
       ],
       "title": "UmlInterface",
@@ -485,7 +530,6 @@
         }
       },
       "required": [
-        "id",
         "name",
         "sender",
         "receiver",
@@ -523,6 +567,13 @@
             "$ref": "#/$defs/UmlEnumeration"
           },
           "title": "Enumerations",
+          "type": "array"
+        },
+        "primitiveTypes": {
+          "items": {
+            "$ref": "#/$defs/UmlPrimitiveType"
+          },
+          "title": "Primitivetypes",
           "type": "array"
         },
         "associations": {
@@ -597,7 +648,6 @@
         }
       },
       "required": [
-        "id",
         "name",
         "guard"
       ],
@@ -606,9 +656,20 @@
     },
     "UmlOperation": {
       "properties": {
-        "name": {
-          "title": "Name",
+        "id": {
+          "title": "Id",
           "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
         },
         "parameters": {
           "items": {
@@ -620,7 +681,22 @@
         "return_type": {
           "anyOf": [
             {
-              "type": "string"
+              "$ref": "#/$defs/UmlPrimitiveType"
+            },
+            {
+              "$ref": "#/$defs/UmlClass"
+            },
+            {
+              "$ref": "#/$defs/UmlInterface"
+            },
+            {
+              "$ref": "#/$defs/UmlDataType"
+            },
+            {
+              "$ref": "#/$defs/UmlEnumeration"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
             },
             {
               "type": "null"
@@ -646,13 +722,43 @@
     },
     "UmlParameter": {
       "properties": {
-        "name": {
-          "title": "Name",
+        "id": {
+          "title": "Id",
           "type": "string"
         },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        },
         "type": {
-          "title": "Type",
-          "type": "string"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlPrimitiveType"
+            },
+            {
+              "$ref": "#/$defs/UmlClass"
+            },
+            {
+              "$ref": "#/$defs/UmlInterface"
+            },
+            {
+              "$ref": "#/$defs/UmlDataType"
+            },
+            {
+              "$ref": "#/$defs/UmlEnumeration"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Type"
         }
       },
       "required": [
@@ -660,6 +766,30 @@
         "type"
       ],
       "title": "UmlParameter",
+      "type": "object"
+    },
+    "UmlPrimitiveType": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "UmlPrimitiveType",
       "type": "object"
     },
     "UmlVisibilityEnum": {
@@ -673,6 +803,10 @@
     }
   },
   "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
     "elements": {
       "$ref": "#/$defs/UmlModelElements"
     }

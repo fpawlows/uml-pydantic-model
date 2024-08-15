@@ -1,14 +1,24 @@
 import json
-from typing import List, Optional, Union
-from pydantic import BaseModel, Field, model_serializer
+import uuid
+from typing import List, Any, Type, Optional, Union, Callable
+from functools import wraps
+
+
+from pydantic import BaseModel, Field, model_serializer, field_serializer, model_validator, field_validator
 from enum import Enum
 
-class UmlIdReference(BaseModel):
-    id: str
 
-    @model_serializer
-    def to_json(self):
-        return {"$idref": f"{self.id}"}
+def serialize_field_to_id_reference(field: Union['UmlElement', 'UmlIdReference']) -> dict:
+    return UmlIdReference.from_uml_element(field).model_dump() if isinstance(field, UmlElement) else field.model_dump()
+
+
+class UmlIdReference(BaseModel):
+    idref: str
+    
+    @classmethod
+    def from_uml_element(cls: Type['UmlIdReference'], element: 'UmlElement') -> 'UmlIdReference':
+        return cls(idref=element.id)
+
 
 class UmlVisibilityEnum(str, Enum):
     PUBLIC = "public"
@@ -49,31 +59,49 @@ class UmlInteractionOperatorEnum(str, Enum):
 
 
 class UmlElement(BaseModel):
-    id: str
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
 
 class UmlNamedElement(UmlElement):
     name: Optional[str]
 
-class UmlAttribute(BaseModel):
-    name: str
-    type: UmlIdReference  # Reference to UmlPrimitiveType, UmlClass, UmlInterface, UmlDataType, or UmlEnumeration id
+
+class UmlAttribute(UmlNamedElement):
+    type: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference'] 
     visibility: UmlVisibilityEnum = UmlVisibilityEnum.PUBLIC
 
-class UmlParameter(BaseModel):
-    name: str
-    type: UmlIdReference  # Reference to UmlPrimitiveType, UmlClass, UmlInterface, UmlDataType, or UmlEnumeration id
+    @field_serializer("type")
+    def type_to_json(type: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(type)
 
-class UmlOperation(BaseModel):
-    name: str
+            
+class UmlParameter(UmlNamedElement):
+    type: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference'] 
+
+    @field_serializer("type")
+    def type_to_json(type: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(type)
+    
+
+class UmlOperation(UmlNamedElement):
     parameters: List[UmlParameter] = Field(default_factory=list)
-    return_type: Optional[UmlIdReference]  # Reference to UmlPrimitiveType, UmlClass, UmlInterface, UmlDataType, or UmlEnumeration id
+    return_type: Optional[Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference']] 
     visibility: UmlVisibilityEnum = UmlVisibilityEnum.PUBLIC
 
-class UmlAssociationEnd(BaseModel):
+    @field_serializer("return_type")
+    def return_type_to_json(return_type: Optional[Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference']]) -> dict:
+        return serialize_field_to_id_reference(return_type)
+    
+
+class UmlAssociationEnd(UmlElement):
     role: Optional[str]
     multiplicity: UmlMultiplicityEnum = UmlMultiplicityEnum.ONE
-    object: UmlIdReference  # Reference to UmlClass, UmlInterface, or UmlDataType id
+    object: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference']
     navigability: bool = True
+
+    @field_serializer("object")
+    def object_to_json(object: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(object)
+    
 
 class UmlClass(UmlNamedElement):
     attributes: List[UmlAttribute] = Field(default_factory=list)
@@ -107,31 +135,23 @@ class UmlAssociation(UmlNamedElement):
     association_type: UmlAssociationTypeEnum = UmlAssociationTypeEnum.ASSOCIATION
     direction: UmlAssociationDirectionEnum = UmlAssociationDirectionEnum.UNDIRECTED
 
-class UmlMessage(BaseModel):
-    id: str
-    name: Optional[str]
+class UmlMessage(UmlNamedElement):
     sender: UmlIdReference  # Reference to UmlLifeline id
     receiver: UmlIdReference  # Reference to UmlLifeline id
     content: str
     timestamp: str
 
-class UmlFragment(BaseModel):
-    id: str
-    name: Optional[str]
+class UmlFragment(UmlNamedElement):
     type: str
     interaction_operator: str
     covered: List[UmlIdReference] = Field(default_factory=list)  # References to UmlLifeline ids
     messages: List[UmlMessage] = Field(default_factory=list)
 
-class UmlOperand(BaseModel):
-    id: str
-    name: Optional[str]
+class UmlOperand(UmlNamedElement):
     guard: str
     fragments: List[UmlFragment] = Field(default_factory=list)
 
-class UmlInteraction(BaseModel):
-    id: str
-    name: Optional[str]
+class UmlInteraction(UmlNamedElement):
     lifelines: List[UmlIdReference] = Field(default_factory=list)  # References to UmlLifeline ids
     messages: List[UmlMessage] = Field(default_factory=list)
     fragments: List[UmlFragment] = Field(default_factory=list)
@@ -148,23 +168,28 @@ class UmlModelElements(BaseModel):
     dependencies: List[UmlDependency] = Field(default_factory=list)
     interactions: List[UmlInteraction] = Field(default_factory=list)
 
-class UmlModel(BaseModel):
+class UmlModel(UmlElement):
     elements: UmlModelElements
 
 
 # Example usage
+class1 = UmlClass(id="class1", name="Person")
+class2 = UmlClass(id="class2", name="Address")
+class1.attributes.append(UmlAttribute(name="name", type=class2))
+class2.attributes.append(UmlAttribute(name="street", type=class1))
 model = UmlModel(
     elements=UmlModelElements(
         classes=[
-            UmlClass(id="class1", name="Person"),
+            class1,
+            UmlClass(id="class1", name="Person", attributes=[UmlAttribute(name="name", type=class1)]),
             UmlClass(id="class2", name="Address"),
         ],
         associations=[
             UmlAssociation(
                 id="assoc1",
                 name="PersonAddress",
-                end1=UmlAssociationEnd(role="person", object=UmlIdReference(id="class1")),
-                end2=UmlAssociationEnd(role="address", object=UmlIdReference(id="class2")),
+                end1=UmlAssociationEnd(role="person", object=UmlIdReference(idref="class1")),
+                end2=UmlAssociationEnd(role="address", object=UmlIdReference(idref="class2")),
             ),
         ],
     )
