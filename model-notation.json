@@ -18,26 +18,26 @@
           "title": "Name"
         },
         "end1": {
-          "$ref": "#/$defs/UmlAssociationEnd"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlAssociationEnd"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "End1"
         },
         "end2": {
-          "$ref": "#/$defs/UmlAssociationEnd"
-        },
-        "association_type": {
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/$defs/UmlAssociationTypeEnum"
+              "$ref": "#/$defs/UmlAssociationEnd"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
             }
           ],
-          "default": "association"
-        },
-        "direction": {
-          "allOf": [
-            {
-              "$ref": "#/$defs/UmlAssociationDirectionEnum"
-            }
-          ],
-          "default": "undirected"
+          "title": "End2"
         }
       },
       "required": [
@@ -48,30 +48,11 @@
       "title": "UmlAssociation",
       "type": "object"
     },
-    "UmlAssociationDirectionEnum": {
-      "enum": [
-        "undirected",
-        "directed"
-      ],
-      "title": "UmlAssociationDirectionEnum",
-      "type": "string"
-    },
     "UmlAssociationEnd": {
       "properties": {
         "id": {
           "title": "Id",
           "type": "string"
-        },
-        "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "title": "Role"
         },
         "multiplicity": {
           "allOf": [
@@ -99,10 +80,25 @@
               "$ref": "#/$defs/UmlEnumeration"
             },
             {
+              "$ref": "#/$defs/UmlAttribute"
+            },
+            {
               "$ref": "#/$defs/UmlIdReference"
             }
           ],
           "title": "Object"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
         },
         "navigability": {
           "default": true,
@@ -111,20 +107,10 @@
         }
       },
       "required": [
-        "role",
         "object"
       ],
       "title": "UmlAssociationEnd",
       "type": "object"
-    },
-    "UmlAssociationTypeEnum": {
-      "enum": [
-        "association",
-        "aggregation",
-        "composition"
-      ],
-      "title": "UmlAssociationTypeEnum",
-      "type": "string"
     },
     "UmlAttribute": {
       "properties": {
@@ -173,6 +159,90 @@
             }
           ],
           "default": "public"
+        },
+        "is_static": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Static"
+        },
+        "is_ordered": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Ordered"
+        },
+        "is_unique": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Unique"
+        },
+        "is_read_only": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Read Only"
+        },
+        "is_query": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Query"
+        },
+        "is_derived": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Derived"
+        },
+        "is_derived_union": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Derived Union"
         }
       },
       "required": [
@@ -199,6 +269,14 @@
           ],
           "title": "Name"
         },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
         "attributes": {
           "items": {
             "$ref": "#/$defs/UmlAttribute"
@@ -213,16 +291,30 @@
           "title": "Operations",
           "type": "array"
         },
-        "super_classes": {
+        "generalizations": {
           "items": {
-            "$ref": "#/$defs/UmlIdReference"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlGeneralization"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
           },
-          "title": "Super Classes",
+          "title": "Generalizations",
           "type": "array"
         },
         "interfaces": {
           "items": {
-            "$ref": "#/$defs/UmlIdReference"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlRealization"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
           },
           "title": "Interfaces",
           "type": "array"
@@ -275,17 +367,39 @@
           ],
           "title": "Name"
         },
-        "client": {
-          "$ref": "#/$defs/UmlIdReference"
-        },
         "supplier": {
-          "$ref": "#/$defs/UmlIdReference"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlClass"
+            },
+            {
+              "$ref": "#/$defs/UmlInterface"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Supplier"
+        },
+        "client": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlClass"
+            },
+            {
+              "$ref": "#/$defs/UmlInterface"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Client"
         }
       },
       "required": [
         "name",
-        "client",
-        "supplier"
+        "supplier",
+        "client"
       ],
       "title": "UmlDependency",
       "type": "object"
@@ -387,10 +501,32 @@
           "title": "Name"
         },
         "specific": {
-          "$ref": "#/$defs/UmlIdReference"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlClass"
+            },
+            {
+              "$ref": "#/$defs/UmlInterface"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Specific"
         },
         "general": {
-          "$ref": "#/$defs/UmlIdReference"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlClass"
+            },
+            {
+              "$ref": "#/$defs/UmlInterface"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "General"
         }
       },
       "required": [
@@ -482,6 +618,21 @@
             }
           ],
           "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
+        "attributes": {
+          "items": {
+            "$ref": "#/$defs/UmlAttribute"
+          },
+          "title": "Attributes",
+          "type": "array"
         },
         "operations": {
           "items": {
@@ -595,6 +746,13 @@
             "$ref": "#/$defs/UmlDependency"
           },
           "title": "Dependencies",
+          "type": "array"
+        },
+        "realizations": {
+          "items": {
+            "$ref": "#/$defs/UmlRealization"
+          },
+          "title": "Realizations",
           "type": "array"
         },
         "interactions": {
@@ -711,6 +869,90 @@
             }
           ],
           "default": "public"
+        },
+        "is_static": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Static"
+        },
+        "is_ordered": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Ordered"
+        },
+        "is_unique": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Unique"
+        },
+        "is_query": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Query"
+        },
+        "is_derived": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Derived"
+        },
+        "is_derived_union": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Derived Union"
+        },
+        "is_abstract": {
+          "default": false,
+          "title": "Is Abstract",
+          "type": "boolean"
+        },
+        "exceptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Exceptions",
+          "type": "array"
         }
       },
       "required": [
@@ -784,12 +1026,89 @@
             }
           ],
           "title": "Name"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlPrimitiveTypeTypesEnum"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Type"
         }
       },
       "required": [
-        "name"
+        "name",
+        "type"
       ],
       "title": "UmlPrimitiveType",
+      "type": "object"
+    },
+    "UmlPrimitiveTypeTypesEnum": {
+      "enum": [
+        "boolean",
+        "integer",
+        "real",
+        "string",
+        "unlimited_natural"
+      ],
+      "title": "UmlPrimitiveTypeTypesEnum",
+      "type": "string"
+    },
+    "UmlRealization": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        },
+        "supplier": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlClass"
+            },
+            {
+              "$ref": "#/$defs/UmlInterface"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Supplier"
+        },
+        "client": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlClass"
+            },
+            {
+              "$ref": "#/$defs/UmlInterface"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Client"
+        }
+      },
+      "required": [
+        "name",
+        "supplier",
+        "client"
+      ],
+      "title": "UmlRealization",
       "type": "object"
     },
     "UmlVisibilityEnum": {

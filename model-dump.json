@@ -1,47 +1,64 @@
 {
-  "id": "6a9bae2d-f8bb-4361-ad48-10726bb781f0",
+  "id": "7b9c5be6-ee4a-420c-8c98-0536968de8b6",
   "elements": {
     "classes": [
       {
         "id": "class1",
         "name": "Person",
+        "visibility": "public",
         "attributes": [
           {
-            "id": "19445ecf-51f3-41c6-92f9-8f0b19e38850",
+            "id": "dab2513f-4cd5-469f-8a80-4bbfb9372669",
             "name": "name",
             "type": {
               "idref": "class2"
             },
-            "visibility": "public"
+            "visibility": "public",
+            "is_static": null,
+            "is_ordered": null,
+            "is_unique": null,
+            "is_read_only": null,
+            "is_query": null,
+            "is_derived": null,
+            "is_derived_union": null
           }
         ],
         "operations": [],
-        "super_classes": [],
+        "generalizations": [],
         "interfaces": []
       },
       {
         "id": "class1",
         "name": "Person",
+        "visibility": "public",
         "attributes": [
           {
-            "id": "8ca94e68-e397-4d0b-967c-c080a416e757",
+            "id": "09a42526-f296-4cc0-bd21-091510373c47",
             "name": "name",
             "type": {
               "idref": "class1"
             },
-            "visibility": "public"
+            "visibility": "public",
+            "is_static": null,
+            "is_ordered": null,
+            "is_unique": null,
+            "is_read_only": null,
+            "is_query": null,
+            "is_derived": null,
+            "is_derived_union": null
           }
         ],
         "operations": [],
-        "super_classes": [],
+        "generalizations": [],
         "interfaces": []
       },
       {
         "id": "class2",
         "name": "Address",
+        "visibility": "public",
         "attributes": [],
         "operations": [],
-        "super_classes": [],
+        "generalizations": [],
         "interfaces": []
       }
     ],
@@ -54,29 +71,16 @@
         "id": "assoc1",
         "name": "PersonAddress",
         "end1": {
-          "id": "da8a4fac-0f0c-45d4-acaf-2ef2f19c2f45",
-          "role": "person",
-          "multiplicity": "1",
-          "object": {
-            "idref": "class1"
-          },
-          "navigability": true
+          "idref": "9612f36a-bf27-48f4-af49-56cfa8a161b6"
         },
         "end2": {
-          "id": "d0605dd4-9b24-4fa2-8439-af1006b698a2",
-          "role": "address",
-          "multiplicity": "1",
-          "object": {
-            "idref": "class2"
-          },
-          "navigability": true
-        },
-        "association_type": "association",
-        "direction": "undirected"
+          "idref": "7491d3dc-09f0-43a2-ac6f-e5741cc9b35c"
+        }
       }
     ],
     "generalizations": [],
     "dependencies": [],
+    "realizations": [],
     "interactions": []
   }
 }

@@ -68,6 +68,13 @@ class UmlNamedElement(UmlElement):
 class UmlAttribute(UmlNamedElement):
     type: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference'] 
     visibility: UmlVisibilityEnum = UmlVisibilityEnum.PUBLIC
+    is_static: Optional[bool] = None
+    is_ordered: Optional[bool] = None
+    is_unique: Optional[bool] = None
+    is_read_only: Optional[bool] = None
+    is_query: Optional[bool] = None
+    is_derived: Optional[bool] = None
+    is_derived_union: Optional[bool] = None
 
     @field_serializer("type")
     def type_to_json(type: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference']) -> dict:
@@ -86,31 +93,42 @@ class UmlOperation(UmlNamedElement):
     parameters: List[UmlParameter] = Field(default_factory=list)
     return_type: Optional[Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference']] 
     visibility: UmlVisibilityEnum = UmlVisibilityEnum.PUBLIC
+    is_static: Optional[bool] = None
+    is_ordered: Optional[bool] = None
+    is_unique: Optional[bool] = None
+    is_query: Optional[bool] = None
+    is_derived: Optional[bool] = None
+    is_derived_union: Optional[bool] = None
+    is_abstract: bool = False
+    exceptions: List[str] = Field(default_factory=list)
 
     @field_serializer("return_type")
     def return_type_to_json(return_type: Optional[Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference']]) -> dict:
         return serialize_field_to_id_reference(return_type)
     
 
-class UmlAssociationEnd(UmlElement):
-    role: Optional[str]
-    multiplicity: UmlMultiplicityEnum = UmlMultiplicityEnum.ONE
-    object: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference']
-    navigability: bool = True
 
-    @field_serializer("object")
-    def object_to_json(object: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlIdReference']) -> dict:
-        return serialize_field_to_id_reference(object)
-    
-
-class UmlClass(UmlNamedElement):
+class UmlClassifier(UmlNamedElement):
+    visibility: UmlVisibilityEnum = UmlVisibilityEnum.PUBLIC
     attributes: List[UmlAttribute] = Field(default_factory=list)
     operations: List[UmlOperation] = Field(default_factory=list)
-    super_classes: List[UmlIdReference] = Field(default_factory=list)  # References to UmlClass ids
-    interfaces: List[UmlIdReference] = Field(default_factory=list)  # References to UmlInterface ids
 
-class UmlInterface(UmlNamedElement):
-    operations: List[UmlOperation] = Field(default_factory=list)
+
+class UmlClass(UmlClassifier):
+    generalizations: List[Union['UmlGeneralization', 'UmlIdReference']] = Field(default_factory=list) 
+    interfaces: List[Union['UmlRealization', 'UmlIdReference']] = Field(default_factory=list) 
+
+    @field_serializer("generalizations")
+    def generalizations_to_json(generalizations: List[UmlIdReference]) -> List[dict]:
+        return [serialize_field_to_id_reference(super_class) for super_class in generalizations]
+    
+    @field_serializer("interfaces")
+    def interfaces_to_json(interfaces: List[UmlIdReference]) -> List[dict]:
+        return [serialize_field_to_id_reference(interface) for interface in interfaces]
+
+
+class UmlInterface(UmlClassifier):
+    pass
 
 class UmlDataType(UmlNamedElement):
     pass
@@ -118,22 +136,94 @@ class UmlDataType(UmlNamedElement):
 class UmlEnumeration(UmlNamedElement):
     literals: List[str] = Field(default_factory=list)
 
+
+class UmlPrimitiveTypeTypesEnum(str, Enum):
+    BOOLEAN = "boolean"
+    INTEGER = "integer"
+    REAL = "real"
+    STRING = "string"
+    UNLIMITED_NATURAL = "unlimited_natural"
+    
+
+
 class UmlPrimitiveType(UmlNamedElement):
-    pass
+    type: UmlPrimitiveTypeTypesEnum | str
+    
 
-class UmlGeneralization(UmlNamedElement):
-    specific: UmlIdReference  # Reference to UmlClass id
-    general: UmlIdReference  # Reference to UmlClass id
+    
+class UmlAssociationEnd(UmlElement):
+    multiplicity: UmlMultiplicityEnum = UmlMultiplicityEnum.ONE
+    object: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlAttribute', 'UmlIdReference']
+    role: Optional[str] = None
+    navigability: bool = True
 
-class UmlDependency(UmlNamedElement):
-    client: UmlIdReference  # Reference to UmlClass or UmlInterface id
-    supplier: UmlIdReference  # Reference to UmlClass or UmlInterface id
+    @field_serializer("object")
+    def object_to_json(object: Union['UmlPrimitiveType', 'UmlClass', 'UmlInterface', 'UmlDataType', 'UmlEnumeration', 'UmlAttribute', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(object)
+    
 
 class UmlAssociation(UmlNamedElement):
-    end1: UmlAssociationEnd
-    end2: UmlAssociationEnd
-    association_type: UmlAssociationTypeEnum = UmlAssociationTypeEnum.ASSOCIATION
-    direction: UmlAssociationDirectionEnum = UmlAssociationDirectionEnum.UNDIRECTED
+    end1: Union['UmlAssociationEnd', 'UmlIdReference']
+    end2: Union['UmlAssociationEnd', 'UmlIdReference']
+
+    @field_serializer("end1")
+    def end1_to_json(end1: Union['UmlAssociationEnd', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(end1)
+    
+    @field_serializer("end2")
+    def end2_to_json(end2: Union['UmlAssociationEnd', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(end2)
+    
+
+class UmlDirectedAssociation(UmlNamedElement):
+    source: Union['UmlAssociationEnd', 'UmlIdReference']
+    target: Union['UmlAssociationEnd', 'UmlIdReference']
+
+    @field_serializer("source")
+    def source_to_json(source: Union['UmlAssociationEnd', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(source)
+    
+    @field_serializer("target")
+    def target_to_json(target: Union['UmlAssociationEnd', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(target)
+
+
+class Aggregation(UmlDirectedAssociation):
+    pass
+
+class UmlComposition(UmlDirectedAssociation):
+    pass
+
+
+class UmlDependency(UmlNamedElement):
+    supplier: Union['UmlClass', 'UmlInterface', 'UmlIdReference']
+    client: Union['UmlClass', 'UmlInterface', 'UmlIdReference']
+
+    @field_serializer("supplier")
+    def supplier_to_json(supplier: Union['UmlClass', 'UmlInterface', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(supplier)
+    
+    @field_serializer("client")
+    def client_to_json(client: Union['UmlClass', 'UmlInterface', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(client)
+
+class UmlRealization(UmlDependency):
+    pass
+
+
+class UmlGeneralization(UmlNamedElement):
+    specific: Union['UmlClass', 'UmlInterface', 'UmlIdReference']
+    general: Union['UmlClass', 'UmlInterface', 'UmlIdReference']
+
+    @field_serializer("specific")
+    def specific_to_json(specific: Union['UmlClass', 'UmlInterface', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(specific)
+    
+    @field_serializer("general")
+    def general_to_json(general: Union['UmlClass', 'UmlInterface', 'UmlIdReference']) -> dict:
+        return serialize_field_to_id_reference(general)
+
+
 
 class UmlMessage(UmlNamedElement):
     sender: UmlIdReference  # Reference to UmlLifeline id
@@ -144,7 +234,7 @@ class UmlMessage(UmlNamedElement):
 class UmlFragment(UmlNamedElement):
     type: str
     interaction_operator: str
-    covered: List[UmlIdReference] = Field(default_factory=list)  # References to UmlLifeline ids
+    covered: List[UmlIdReference] = Field(default_factory=list) 
     messages: List[UmlMessage] = Field(default_factory=list)
 
 class UmlOperand(UmlNamedElement):
@@ -152,7 +242,7 @@ class UmlOperand(UmlNamedElement):
     fragments: List[UmlFragment] = Field(default_factory=list)
 
 class UmlInteraction(UmlNamedElement):
-    lifelines: List[UmlIdReference] = Field(default_factory=list)  # References to UmlLifeline ids
+    lifelines: List[UmlIdReference] = Field(default_factory=list) 
     messages: List[UmlMessage] = Field(default_factory=list)
     fragments: List[UmlFragment] = Field(default_factory=list)
     operands: List[UmlOperand] = Field(default_factory=list)
@@ -166,7 +256,10 @@ class UmlModelElements(BaseModel):
     associations: List[UmlAssociation] = Field(default_factory=list)
     generalizations: List[UmlGeneralization] = Field(default_factory=list)
     dependencies: List[UmlDependency] = Field(default_factory=list)
+    realizations: List[UmlRealization] = Field(default_factory=list)
     interactions: List[UmlInteraction] = Field(default_factory=list)
+
+
 
 class UmlModel(UmlElement):
     elements: UmlModelElements
