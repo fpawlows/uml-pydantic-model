@@ -1,6 +1,6 @@
 {
   "$defs": {
-    "Association": {
+    "UmlAssociation": {
       "properties": {
         "id": {
           "title": "Id",
@@ -18,15 +18,15 @@
           "title": "Name"
         },
         "end1": {
-          "$ref": "#/$defs/AssociationEnd"
+          "$ref": "#/$defs/UmlAssociationEnd"
         },
         "end2": {
-          "$ref": "#/$defs/AssociationEnd"
+          "$ref": "#/$defs/UmlAssociationEnd"
         },
         "association_type": {
           "allOf": [
             {
-              "$ref": "#/$defs/AssociationTypeEnum"
+              "$ref": "#/$defs/UmlAssociationTypeEnum"
             }
           ],
           "default": "association"
@@ -34,7 +34,7 @@
         "direction": {
           "allOf": [
             {
-              "$ref": "#/$defs/AssociationDirectionEnum"
+              "$ref": "#/$defs/UmlAssociationDirectionEnum"
             }
           ],
           "default": "undirected"
@@ -46,18 +46,18 @@
         "end1",
         "end2"
       ],
-      "title": "Association",
+      "title": "UmlAssociation",
       "type": "object"
     },
-    "AssociationDirectionEnum": {
+    "UmlAssociationDirectionEnum": {
       "enum": [
         "undirected",
         "directed"
       ],
-      "title": "AssociationDirectionEnum",
+      "title": "UmlAssociationDirectionEnum",
       "type": "string"
     },
-    "AssociationEnd": {
+    "UmlAssociationEnd": {
       "properties": {
         "role": {
           "anyOf": [
@@ -73,14 +73,13 @@
         "multiplicity": {
           "allOf": [
             {
-              "$ref": "#/$defs/MultiplicityEnum"
+              "$ref": "#/$defs/UmlMultiplicityEnum"
             }
           ],
           "default": "1"
         },
-        "type": {
-          "title": "Type",
-          "type": "string"
+        "object": {
+          "$ref": "#/$defs/UmlIdReference"
         },
         "navigability": {
           "default": true,
@@ -90,21 +89,21 @@
       },
       "required": [
         "role",
-        "type"
+        "object"
       ],
-      "title": "AssociationEnd",
+      "title": "UmlAssociationEnd",
       "type": "object"
     },
-    "AssociationTypeEnum": {
+    "UmlAssociationTypeEnum": {
       "enum": [
         "association",
         "aggregation",
         "composition"
       ],
-      "title": "AssociationTypeEnum",
+      "title": "UmlAssociationTypeEnum",
       "type": "string"
     },
-    "Attribute": {
+    "UmlAttribute": {
       "properties": {
         "name": {
           "title": "Name",
@@ -117,7 +116,7 @@
         "visibility": {
           "allOf": [
             {
-              "$ref": "#/$defs/VisibilityEnum"
+              "$ref": "#/$defs/UmlVisibilityEnum"
             }
           ],
           "default": "public"
@@ -127,10 +126,10 @@
         "name",
         "type"
       ],
-      "title": "Attribute",
+      "title": "UmlAttribute",
       "type": "object"
     },
-    "Class": {
+    "UmlClass": {
       "properties": {
         "id": {
           "title": "Id",
@@ -149,28 +148,28 @@
         },
         "attributes": {
           "items": {
-            "$ref": "#/$defs/Attribute"
+            "$ref": "#/$defs/UmlAttribute"
           },
           "title": "Attributes",
           "type": "array"
         },
         "operations": {
           "items": {
-            "$ref": "#/$defs/Operation"
+            "$ref": "#/$defs/UmlOperation"
           },
           "title": "Operations",
           "type": "array"
         },
         "super_classes": {
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/UmlIdReference"
           },
           "title": "Super Classes",
           "type": "array"
         },
         "interfaces": {
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/UmlIdReference"
           },
           "title": "Interfaces",
           "type": "array"
@@ -180,10 +179,10 @@
         "id",
         "name"
       ],
-      "title": "Class",
+      "title": "UmlClass",
       "type": "object"
     },
-    "DataType": {
+    "UmlDataType": {
       "properties": {
         "id": {
           "title": "Id",
@@ -205,10 +204,10 @@
         "id",
         "name"
       ],
-      "title": "DataType",
+      "title": "UmlDataType",
       "type": "object"
     },
-    "Dependency": {
+    "UmlDependency": {
       "properties": {
         "id": {
           "title": "Id",
@@ -226,12 +225,10 @@
           "title": "Name"
         },
         "client": {
-          "title": "Client",
-          "type": "string"
+          "$ref": "#/$defs/UmlIdReference"
         },
         "supplier": {
-          "title": "Supplier",
-          "type": "string"
+          "$ref": "#/$defs/UmlIdReference"
         }
       },
       "required": [
@@ -240,10 +237,10 @@
         "client",
         "supplier"
       ],
-      "title": "Dependency",
+      "title": "UmlDependency",
       "type": "object"
     },
-    "Enumeration": {
+    "UmlEnumeration": {
       "properties": {
         "id": {
           "title": "Id",
@@ -272,10 +269,10 @@
         "id",
         "name"
       ],
-      "title": "Enumeration",
+      "title": "UmlEnumeration",
       "type": "object"
     },
-    "Fragment": {
+    "UmlFragment": {
       "properties": {
         "id": {
           "title": "Id",
@@ -302,14 +299,14 @@
         },
         "covered": {
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/UmlIdReference"
           },
           "title": "Covered",
           "type": "array"
         },
         "messages": {
           "items": {
-            "$ref": "#/$defs/Message"
+            "$ref": "#/$defs/UmlMessage"
           },
           "title": "Messages",
           "type": "array"
@@ -321,10 +318,10 @@
         "type",
         "interaction_operator"
       ],
-      "title": "Fragment",
+      "title": "UmlFragment",
       "type": "object"
     },
-    "Generalization": {
+    "UmlGeneralization": {
       "properties": {
         "id": {
           "title": "Id",
@@ -342,12 +339,10 @@
           "title": "Name"
         },
         "specific": {
-          "title": "Specific",
-          "type": "string"
+          "$ref": "#/$defs/UmlIdReference"
         },
         "general": {
-          "title": "General",
-          "type": "string"
+          "$ref": "#/$defs/UmlIdReference"
         }
       },
       "required": [
@@ -356,10 +351,23 @@
         "specific",
         "general"
       ],
-      "title": "Generalization",
+      "title": "UmlGeneralization",
       "type": "object"
     },
-    "Interaction": {
+    "UmlIdReference": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "UmlIdReference",
+      "type": "object"
+    },
+    "UmlInteraction": {
       "properties": {
         "id": {
           "title": "Id",
@@ -378,28 +386,28 @@
         },
         "participants": {
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/UmlIdReference"
           },
           "title": "Participants",
           "type": "array"
         },
         "messages": {
           "items": {
-            "$ref": "#/$defs/Message"
+            "$ref": "#/$defs/UmlMessage"
           },
           "title": "Messages",
           "type": "array"
         },
         "fragments": {
           "items": {
-            "$ref": "#/$defs/Fragment"
+            "$ref": "#/$defs/UmlFragment"
           },
           "title": "Fragments",
           "type": "array"
         },
         "operands": {
           "items": {
-            "$ref": "#/$defs/Operand"
+            "$ref": "#/$defs/UmlOperand"
           },
           "title": "Operands",
           "type": "array"
@@ -409,10 +417,10 @@
         "id",
         "name"
       ],
-      "title": "Interaction",
+      "title": "UmlInteraction",
       "type": "object"
     },
-    "Interface": {
+    "UmlInterface": {
       "properties": {
         "id": {
           "title": "Id",
@@ -431,7 +439,7 @@
         },
         "operations": {
           "items": {
-            "$ref": "#/$defs/Operation"
+            "$ref": "#/$defs/UmlOperation"
           },
           "title": "Operations",
           "type": "array"
@@ -441,10 +449,10 @@
         "id",
         "name"
       ],
-      "title": "Interface",
+      "title": "UmlInterface",
       "type": "object"
     },
-    "Message": {
+    "UmlMessage": {
       "properties": {
         "id": {
           "title": "Id",
@@ -462,12 +470,10 @@
           "title": "Name"
         },
         "sender": {
-          "title": "Sender",
-          "type": "string"
+          "$ref": "#/$defs/UmlIdReference"
         },
         "receiver": {
-          "title": "Receiver",
-          "type": "string"
+          "$ref": "#/$defs/UmlIdReference"
         },
         "content": {
           "title": "Content",
@@ -486,82 +492,82 @@
         "content",
         "timestamp"
       ],
-      "title": "Message",
+      "title": "UmlMessage",
       "type": "object"
     },
-    "ModelElements": {
+    "UmlModelElements": {
       "properties": {
         "classes": {
           "items": {
-            "$ref": "#/$defs/Class"
+            "$ref": "#/$defs/UmlClass"
           },
           "title": "Classes",
           "type": "array"
         },
         "interfaces": {
           "items": {
-            "$ref": "#/$defs/Interface"
+            "$ref": "#/$defs/UmlInterface"
           },
           "title": "Interfaces",
           "type": "array"
         },
         "dataTypes": {
           "items": {
-            "$ref": "#/$defs/DataType"
+            "$ref": "#/$defs/UmlDataType"
           },
           "title": "Datatypes",
           "type": "array"
         },
         "enumerations": {
           "items": {
-            "$ref": "#/$defs/Enumeration"
+            "$ref": "#/$defs/UmlEnumeration"
           },
           "title": "Enumerations",
           "type": "array"
         },
         "associations": {
           "items": {
-            "$ref": "#/$defs/Association"
+            "$ref": "#/$defs/UmlAssociation"
           },
           "title": "Associations",
           "type": "array"
         },
         "generalizations": {
           "items": {
-            "$ref": "#/$defs/Generalization"
+            "$ref": "#/$defs/UmlGeneralization"
           },
           "title": "Generalizations",
           "type": "array"
         },
         "dependencies": {
           "items": {
-            "$ref": "#/$defs/Dependency"
+            "$ref": "#/$defs/UmlDependency"
           },
           "title": "Dependencies",
           "type": "array"
         },
         "interactions": {
           "items": {
-            "$ref": "#/$defs/Interaction"
+            "$ref": "#/$defs/UmlInteraction"
           },
           "title": "Interactions",
           "type": "array"
         }
       },
-      "title": "ModelElements",
+      "title": "UmlModelElements",
       "type": "object"
     },
-    "MultiplicityEnum": {
+    "UmlMultiplicityEnum": {
       "enum": [
         "0..1",
         "1",
         "0..*",
         "1..*"
       ],
-      "title": "MultiplicityEnum",
+      "title": "UmlMultiplicityEnum",
       "type": "string"
     },
-    "Operand": {
+    "UmlOperand": {
       "properties": {
         "id": {
           "title": "Id",
@@ -584,7 +590,7 @@
         },
         "fragments": {
           "items": {
-            "$ref": "#/$defs/Fragment"
+            "$ref": "#/$defs/UmlFragment"
           },
           "title": "Fragments",
           "type": "array"
@@ -595,10 +601,10 @@
         "name",
         "guard"
       ],
-      "title": "Operand",
+      "title": "UmlOperand",
       "type": "object"
     },
-    "Operation": {
+    "UmlOperation": {
       "properties": {
         "name": {
           "title": "Name",
@@ -606,7 +612,7 @@
         },
         "parameters": {
           "items": {
-            "$ref": "#/$defs/Parameter"
+            "$ref": "#/$defs/UmlParameter"
           },
           "title": "Parameters",
           "type": "array"
@@ -625,7 +631,7 @@
         "visibility": {
           "allOf": [
             {
-              "$ref": "#/$defs/VisibilityEnum"
+              "$ref": "#/$defs/UmlVisibilityEnum"
             }
           ],
           "default": "public"
@@ -635,10 +641,10 @@
         "name",
         "return_type"
       ],
-      "title": "Operation",
+      "title": "UmlOperation",
       "type": "object"
     },
-    "Parameter": {
+    "UmlParameter": {
       "properties": {
         "name": {
           "title": "Name",
@@ -653,22 +659,22 @@
         "name",
         "type"
       ],
-      "title": "Parameter",
+      "title": "UmlParameter",
       "type": "object"
     },
-    "VisibilityEnum": {
+    "UmlVisibilityEnum": {
       "enum": [
         "public",
         "private",
         "protected"
       ],
-      "title": "VisibilityEnum",
+      "title": "UmlVisibilityEnum",
       "type": "string"
     }
   },
   "properties": {
     "elements": {
-      "$ref": "#/$defs/ModelElements"
+      "$ref": "#/$defs/UmlModelElements"
     }
   },
   "required": [

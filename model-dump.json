@@ -1,0 +1,52 @@
+{
+  "elements": {
+    "classes": [
+      {
+        "id": "class1",
+        "name": "Person",
+        "attributes": [],
+        "operations": [],
+        "super_classes": [],
+        "interfaces": []
+      },
+      {
+        "id": "class2",
+        "name": "Address",
+        "attributes": [],
+        "operations": [],
+        "super_classes": [],
+        "interfaces": []
+      }
+    ],
+    "interfaces": [],
+    "dataTypes": [],
+    "enumerations": [],
+    "associations": [
+      {
+        "id": "assoc1",
+        "name": "PersonAddress",
+        "end1": {
+          "role": "person",
+          "multiplicity": "1",
+          "object": {
+            "$idref": "class1"
+          },
+          "navigability": true
+        },
+        "end2": {
+          "role": "address",
+          "multiplicity": "1",
+          "object": {
+            "$idref": "class2"
+          },
+          "navigability": true
+        },
+        "association_type": "association",
+        "direction": "undirected"
+      }
+    ],
+    "generalizations": [],
+    "dependencies": [],
+    "interactions": []
+  }
+}
