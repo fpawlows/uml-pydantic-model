@@ -8,7 +8,7 @@
         "visibility": "public",
         "attributes": [
           {
-            "id": "28cf7aa2-d695-4eda-a48e-e46cfbd200da",
+            "id": "6bc76a1c-cf90-488b-b0fd-c19d50d65a56",
             "name": "name",
             "type": {
               "idref": "type1"
@@ -23,7 +23,7 @@
             "is_derived_union": null
           },
           {
-            "id": "f47002e2-9e86-46bc-a263-2b2fa3c9698a",
+            "id": "2693c395-2159-4fbc-833a-3cf161133f32",
             "name": "age",
             "type": {
               "idref": "type2"
@@ -40,7 +40,7 @@
         ],
         "operations": [
           {
-            "id": "2c1f9312-7cbe-4e66-b9a8-cb14731e64cb",
+            "id": "bda92b18-b151-4e52-8fb2-6de61125dd60",
             "name": "getName",
             "parameters": [],
             "return_type": {
@@ -66,7 +66,7 @@
         "visibility": "public",
         "attributes": [
           {
-            "id": "5fcfdfca-0193-4dea-b1a6-084629754d00",
+            "id": "edd7dbc2-a8e2-4afb-93cf-ef671738cea3",
             "name": "street",
             "type": {
               "idref": "type1"
@@ -81,7 +81,7 @@
             "is_derived_union": null
           },
           {
-            "id": "b328293e-c993-4f22-907a-7224ca041bd1",
+            "id": "0018203c-0278-43e3-823f-a98c390dcfde",
             "name": "zipcode",
             "type": {
               "idref": "type2"
@@ -109,7 +109,7 @@
         "attributes": [],
         "operations": [
           {
-            "id": "19636c97-6c2a-498a-9ece-2c284d41306b",
+            "id": "637eea43-46c3-4f54-97e4-334fed887c88",
             "name": "getAge",
             "parameters": [],
             "return_type": {
