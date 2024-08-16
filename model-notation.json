@@ -15,6 +15,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "end1": {
@@ -41,7 +42,6 @@
         }
       },
       "required": [
-        "name",
         "end1",
         "end2"
       ],
@@ -127,6 +127,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "type": {
@@ -246,7 +247,6 @@
         }
       },
       "required": [
-        "name",
         "type"
       ],
       "title": "UmlAttribute",
@@ -267,6 +267,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "visibility": {
@@ -320,10 +321,68 @@
           "type": "array"
         }
       },
-      "required": [
-        "name"
-      ],
       "title": "UmlClass",
+      "type": "object"
+    },
+    "UmlCombinedFragment": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "covered": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlEnclosedLifelinePart"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Covered",
+          "type": "array"
+        },
+        "interaction_operator": {
+          "$ref": "#/$defs/UmlInteractionOperatorEnum"
+        },
+        "operands": {
+          "items": {
+            "$ref": "#/$defs/UmlOperand"
+          },
+          "title": "Operands",
+          "type": "array"
+        }
+      },
+      "required": [
+        "interaction_operator"
+      ],
+      "title": "UmlCombinedFragment",
+      "type": "object"
+    },
+    "UmlCoveringFragment": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "covered": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlEnclosedLifelinePart"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Covered",
+          "type": "array"
+        }
+      },
+      "title": "UmlCoveringFragment",
       "type": "object"
     },
     "UmlDataType": {
@@ -341,12 +400,10 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         }
       },
-      "required": [
-        "name"
-      ],
       "title": "UmlDataType",
       "type": "object"
     },
@@ -365,6 +422,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "supplier": {
@@ -397,11 +455,53 @@
         }
       },
       "required": [
-        "name",
         "supplier",
         "client"
       ],
       "title": "UmlDependency",
+      "type": "object"
+    },
+    "UmlEnclosedLifelinePart": {
+      "description": "Represents events happening on some part of particular lifeline, e.g. message sending, message receiving, combined fragment, etc.\nPreserves order of events.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "lifeline": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlLifeline"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Lifeline"
+        },
+        "occurences": {
+          "items": {
+            "$ref": "#/$defs/UmlOccurrenceSpecification"
+          },
+          "title": "Occurences",
+          "type": "array"
+        },
+        "enclosed_by": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlCoveringFragment"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "lifeline"
+      ],
+      "title": "UmlEnclosedLifelinePart",
       "type": "object"
     },
     "UmlEnumeration": {
@@ -419,6 +519,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "literals": {
@@ -429,58 +530,7 @@
           "type": "array"
         }
       },
-      "required": [
-        "name"
-      ],
       "title": "UmlEnumeration",
-      "type": "object"
-    },
-    "UmlFragment": {
-      "properties": {
-        "id": {
-          "title": "Id",
-          "type": "string"
-        },
-        "name": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "title": "Name"
-        },
-        "type": {
-          "title": "Type",
-          "type": "string"
-        },
-        "interaction_operator": {
-          "title": "Interaction Operator",
-          "type": "string"
-        },
-        "covered": {
-          "items": {
-            "$ref": "#/$defs/UmlIdReference"
-          },
-          "title": "Covered",
-          "type": "array"
-        },
-        "messages": {
-          "items": {
-            "$ref": "#/$defs/UmlMessage"
-          },
-          "title": "Messages",
-          "type": "array"
-        }
-      },
-      "required": [
-        "name",
-        "type",
-        "interaction_operator"
-      ],
-      "title": "UmlFragment",
       "type": "object"
     },
     "UmlGeneralization": {
@@ -498,6 +548,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "specific": {
@@ -530,7 +581,6 @@
         }
       },
       "required": [
-        "name",
         "specific",
         "general"
       ],
@@ -565,11 +615,12 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "lifelines": {
           "items": {
-            "$ref": "#/$defs/UmlIdReference"
+            "$ref": "#/$defs/UmlLifeline"
           },
           "title": "Lifelines",
           "type": "array"
@@ -581,26 +632,36 @@
           "title": "Messages",
           "type": "array"
         },
-        "fragments": {
+        "combined_fragments": {
           "items": {
-            "$ref": "#/$defs/UmlFragment"
+            "$ref": "#/$defs/UmlCombinedFragment"
           },
-          "title": "Fragments",
-          "type": "array"
-        },
-        "operands": {
-          "items": {
-            "$ref": "#/$defs/UmlOperand"
-          },
-          "title": "Operands",
+          "title": "Combined Fragments",
           "type": "array"
         }
       },
-      "required": [
-        "name"
-      ],
       "title": "UmlInteraction",
       "type": "object"
+    },
+    "UmlInteractionOperatorEnum": {
+      "enum": [
+        "alt",
+        "break",
+        "critical",
+        "else",
+        "ignore",
+        "loop",
+        "par",
+        "strict",
+        "neg",
+        "assert",
+        "ref",
+        "seq",
+        "sd",
+        "opt"
+      ],
+      "title": "UmlInteractionOperatorEnum",
+      "type": "string"
     },
     "UmlInterface": {
       "properties": {
@@ -617,6 +678,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "visibility": {
@@ -642,10 +704,60 @@
           "type": "array"
         }
       },
-      "required": [
-        "name"
-      ],
       "title": "UmlInterface",
+      "type": "object"
+    },
+    "UmlLifeline": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "covered_by": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlEnclosedLifelinePart"
+              },
+              {
+                "$ref": "#/$defs/UmlOccurrenceSpecification"
+              }
+            ]
+          },
+          "title": "Covered By",
+          "type": "array"
+        },
+        "represents": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlClass"
+            },
+            {
+              "$ref": "#/$defs/UmlInterface"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Represents"
+        }
+      },
+      "required": [
+        "represents"
+      ],
+      "title": "UmlLifeline",
       "type": "object"
     },
     "UmlMessage": {
@@ -663,29 +775,69 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
-        "sender": {
-          "$ref": "#/$defs/UmlIdReference"
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlOccurrenceSpecification"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Source"
         },
-        "receiver": {
-          "$ref": "#/$defs/UmlIdReference"
+        "target": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlOccurrenceSpecification"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Target"
         },
-        "content": {
-          "title": "Content",
-          "type": "string"
+        "signature": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlOperation"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Signature"
         },
-        "timestamp": {
-          "title": "Timestamp",
-          "type": "string"
+        "arguments": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Arguments",
+          "type": "array"
+        },
+        "return_value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Return Value"
         }
       },
       "required": [
-        "name",
-        "sender",
-        "receiver",
-        "content",
-        "timestamp"
+        "source",
+        "target"
       ],
       "title": "UmlMessage",
       "type": "object"
@@ -776,13 +928,51 @@
       "title": "UmlMultiplicityEnum",
       "type": "string"
     },
+    "UmlOccurrenceSpecification": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "lifeline": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlLifeline"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Lifeline"
+        }
+      },
+      "required": [
+        "lifeline"
+      ],
+      "title": "UmlOccurrenceSpecification",
+      "type": "object"
+    },
     "UmlOperand": {
       "properties": {
         "id": {
           "title": "Id",
           "type": "string"
         },
-        "name": {
+        "covered": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlEnclosedLifelinePart"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Covered",
+          "type": "array"
+        },
+        "guard": {
           "anyOf": [
             {
               "type": "string"
@@ -791,24 +981,10 @@
               "type": "null"
             }
           ],
-          "title": "Name"
-        },
-        "guard": {
-          "title": "Guard",
-          "type": "string"
-        },
-        "fragments": {
-          "items": {
-            "$ref": "#/$defs/UmlFragment"
-          },
-          "title": "Fragments",
-          "type": "array"
+          "default": null,
+          "title": "Guard"
         }
       },
-      "required": [
-        "name",
-        "guard"
-      ],
       "title": "UmlOperand",
       "type": "object"
     },
@@ -827,6 +1003,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "parameters": {
@@ -860,6 +1037,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Return Type"
         },
         "visibility": {
@@ -955,10 +1133,6 @@
           "type": "array"
         }
       },
-      "required": [
-        "name",
-        "return_type"
-      ],
       "title": "UmlOperation",
       "type": "object"
     },
@@ -977,6 +1151,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "type": {
@@ -1004,7 +1179,6 @@
         }
       },
       "required": [
-        "name",
         "type"
       ],
       "title": "UmlParameter",
@@ -1025,6 +1199,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "type": {
@@ -1040,7 +1215,6 @@
         }
       },
       "required": [
-        "name",
         "type"
       ],
       "title": "UmlPrimitiveType",
@@ -1072,6 +1246,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Name"
         },
         "supplier": {
@@ -1104,7 +1279,6 @@
         }
       },
       "required": [
-        "name",
         "supplier",
         "client"
       ],

@@ -1,5 +1,5 @@
 {
-  "id": "7b9c5be6-ee4a-420c-8c98-0536968de8b6",
+  "id": "model1",
   "elements": {
     "classes": [
       {
@@ -8,10 +8,10 @@
         "visibility": "public",
         "attributes": [
           {
-            "id": "dab2513f-4cd5-469f-8a80-4bbfb9372669",
+            "id": "28cf7aa2-d695-4eda-a48e-e46cfbd200da",
             "name": "name",
             "type": {
-              "idref": "class2"
+              "idref": "type1"
             },
             "visibility": "public",
             "is_static": null,
@@ -21,22 +21,12 @@
             "is_query": null,
             "is_derived": null,
             "is_derived_union": null
-          }
-        ],
-        "operations": [],
-        "generalizations": [],
-        "interfaces": []
-      },
-      {
-        "id": "class1",
-        "name": "Person",
-        "visibility": "public",
-        "attributes": [
+          },
           {
-            "id": "09a42526-f296-4cc0-bd21-091510373c47",
-            "name": "name",
+            "id": "f47002e2-9e86-46bc-a263-2b2fa3c9698a",
+            "name": "age",
             "type": {
-              "idref": "class1"
+              "idref": "type2"
             },
             "visibility": "public",
             "is_static": null,
@@ -48,7 +38,25 @@
             "is_derived_union": null
           }
         ],
-        "operations": [],
+        "operations": [
+          {
+            "id": "2c1f9312-7cbe-4e66-b9a8-cb14731e64cb",
+            "name": "getName",
+            "parameters": [],
+            "return_type": {
+              "idref": "type1"
+            },
+            "visibility": "public",
+            "is_static": null,
+            "is_ordered": null,
+            "is_unique": null,
+            "is_query": null,
+            "is_derived": null,
+            "is_derived_union": null,
+            "is_abstract": false,
+            "exceptions": []
+          }
+        ],
         "generalizations": [],
         "interfaces": []
       },
@@ -56,31 +64,140 @@
         "id": "class2",
         "name": "Address",
         "visibility": "public",
-        "attributes": [],
+        "attributes": [
+          {
+            "id": "5fcfdfca-0193-4dea-b1a6-084629754d00",
+            "name": "street",
+            "type": {
+              "idref": "type1"
+            },
+            "visibility": "public",
+            "is_static": null,
+            "is_ordered": null,
+            "is_unique": null,
+            "is_read_only": null,
+            "is_query": null,
+            "is_derived": null,
+            "is_derived_union": null
+          },
+          {
+            "id": "b328293e-c993-4f22-907a-7224ca041bd1",
+            "name": "zipcode",
+            "type": {
+              "idref": "type2"
+            },
+            "visibility": "public",
+            "is_static": null,
+            "is_ordered": null,
+            "is_unique": null,
+            "is_read_only": null,
+            "is_query": null,
+            "is_derived": null,
+            "is_derived_union": null
+          }
+        ],
         "operations": [],
         "generalizations": [],
         "interfaces": []
       }
     ],
-    "interfaces": [],
+    "interfaces": [
+      {
+        "id": "interface1",
+        "name": "PersonInterface",
+        "visibility": "public",
+        "attributes": [],
+        "operations": [
+          {
+            "id": "19636c97-6c2a-498a-9ece-2c284d41306b",
+            "name": "getAge",
+            "parameters": [],
+            "return_type": {
+              "idref": "type2"
+            },
+            "visibility": "public",
+            "is_static": null,
+            "is_ordered": null,
+            "is_unique": null,
+            "is_query": null,
+            "is_derived": null,
+            "is_derived_union": null,
+            "is_abstract": false,
+            "exceptions": []
+          }
+        ]
+      }
+    ],
     "dataTypes": [],
     "enumerations": [],
     "primitiveTypes": [],
     "associations": [
       {
         "id": "assoc1",
-        "name": "PersonAddress",
+        "name": "PersonAddressAssociation",
         "end1": {
-          "idref": "9612f36a-bf27-48f4-af49-56cfa8a161b6"
+          "idref": "end1"
         },
         "end2": {
-          "idref": "7491d3dc-09f0-43a2-ac6f-e5741cc9b35c"
+          "idref": "end2"
         }
       }
     ],
-    "generalizations": [],
+    "generalizations": [
+      {
+        "id": "gen1",
+        "name": null,
+        "specific": {
+          "idref": "class1"
+        },
+        "general": {
+          "idref": "interface1"
+        }
+      }
+    ],
     "dependencies": [],
     "realizations": [],
-    "interactions": []
+    "interactions": [
+      {
+        "id": "interaction1",
+        "name": "PersonAddressInteraction",
+        "lifelines": [
+          {
+            "id": "lifeline1",
+            "name": "PersonLifeline",
+            "covered_by": [],
+            "represents": {
+              "idref": "class1"
+            }
+          },
+          {
+            "id": "lifeline2",
+            "name": "AddressLifeline",
+            "covered_by": [],
+            "represents": {
+              "idref": "class2"
+            }
+          }
+        ],
+        "messages": [
+          {
+            "id": "message1",
+            "name": "RequestAddress",
+            "source": {
+              "idref": "occ1"
+            },
+            "target": {
+              "idref": "occ2"
+            },
+            "signature": {
+              "idref": "op1"
+            },
+            "arguments": [],
+            "return_value": null
+          }
+        ],
+        "combined_fragments": []
+      }
+    ]
   }
 }
