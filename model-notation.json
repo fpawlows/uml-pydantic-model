@@ -18,6 +18,14 @@
           "default": null,
           "title": "Name"
         },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
         "end1": {
           "anyOf": [
             {
@@ -130,6 +138,14 @@
           "default": null,
           "title": "Name"
         },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
         "type": {
           "anyOf": [
             {
@@ -152,14 +168,6 @@
             }
           ],
           "title": "Type"
-        },
-        "visibility": {
-          "allOf": [
-            {
-              "$ref": "#/$defs/UmlVisibilityEnum"
-            }
-          ],
-          "default": "public"
         },
         "is_static": {
           "anyOf": [
@@ -330,11 +338,31 @@
           "title": "Id",
           "type": "string"
         },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
         "covered": {
           "items": {
             "anyOf": [
               {
-                "$ref": "#/$defs/UmlEnclosedLifelinePart"
+                "$ref": "#/$defs/UmlLifeline"
               },
               {
                 "$ref": "#/$defs/UmlIdReference"
@@ -343,9 +371,6 @@
           },
           "title": "Covered",
           "type": "array"
-        },
-        "interaction_operator": {
-          "$ref": "#/$defs/UmlInteractionOperatorEnum"
         },
         "operands": {
           "items": {
@@ -353,36 +378,15 @@
           },
           "title": "Operands",
           "type": "array"
+        },
+        "operator": {
+          "$ref": "#/$defs/UmlInteractionOperatorEnum"
         }
       },
       "required": [
-        "interaction_operator"
+        "operator"
       ],
       "title": "UmlCombinedFragment",
-      "type": "object"
-    },
-    "UmlCoveringFragment": {
-      "properties": {
-        "id": {
-          "title": "Id",
-          "type": "string"
-        },
-        "covered": {
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/UmlEnclosedLifelinePart"
-              },
-              {
-                "$ref": "#/$defs/UmlIdReference"
-              }
-            ]
-          },
-          "title": "Covered",
-          "type": "array"
-        }
-      },
-      "title": "UmlCoveringFragment",
       "type": "object"
     },
     "UmlDataType": {
@@ -402,6 +406,14 @@
           ],
           "default": null,
           "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
         }
       },
       "title": "UmlDataType",
@@ -424,6 +436,14 @@
           ],
           "default": null,
           "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
         },
         "supplier": {
           "anyOf": [
@@ -461,53 +481,6 @@
       "title": "UmlDependency",
       "type": "object"
     },
-    "UmlEnclosedLifelinePart": {
-      "description": "Represents events happening on some part of particular lifeline, e.g. message sending, message receiving, combined fragment, etc.\nPreserves order of events.",
-      "properties": {
-        "id": {
-          "title": "Id",
-          "type": "string"
-        },
-        "lifeline": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/UmlLifeline"
-            },
-            {
-              "$ref": "#/$defs/UmlIdReference"
-            }
-          ],
-          "title": "Lifeline"
-        },
-        "occurences": {
-          "items": {
-            "$ref": "#/$defs/UmlOccurrenceSpecification"
-          },
-          "title": "Occurences",
-          "type": "array"
-        },
-        "enclosed_by": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/UmlCoveringFragment"
-            },
-            {
-              "$ref": "#/$defs/UmlIdReference"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Enclosed By"
-        }
-      },
-      "required": [
-        "lifeline"
-      ],
-      "title": "UmlEnclosedLifelinePart",
-      "type": "object"
-    },
     "UmlEnumeration": {
       "properties": {
         "id": {
@@ -525,6 +498,14 @@
           ],
           "default": null,
           "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
         },
         "literals": {
           "items": {
@@ -554,6 +535,14 @@
           ],
           "default": null,
           "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
         },
         "specific": {
           "anyOf": [
@@ -622,6 +611,14 @@
           "default": null,
           "title": "Name"
         },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
         "lifelines": {
           "items": {
             "$ref": "#/$defs/UmlLifeline"
@@ -636,11 +633,18 @@
           "title": "Messages",
           "type": "array"
         },
-        "combined_fragments": {
+        "fragments": {
           "items": {
-            "$ref": "#/$defs/UmlCombinedFragment"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlOccurrenceSpecification"
+              },
+              {
+                "$ref": "#/$defs/UmlCombinedFragment"
+              }
+            ]
           },
-          "title": "Combined Fragments",
+          "title": "Fragments",
           "type": "array"
         }
       },
@@ -729,19 +733,13 @@
           "default": null,
           "title": "Name"
         },
-        "covered_by": {
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/UmlEnclosedLifelinePart"
-              },
-              {
-                "$ref": "#/$defs/UmlOccurrenceSpecification"
-              }
-            ]
-          },
-          "title": "Covered By",
-          "type": "array"
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
         },
         "represents": {
           "anyOf": [
@@ -782,18 +780,15 @@
           "default": null,
           "title": "Name"
         },
-        "source": {
-          "anyOf": [
+        "visibility": {
+          "allOf": [
             {
-              "$ref": "#/$defs/UmlOccurrenceSpecification"
-            },
-            {
-              "$ref": "#/$defs/UmlIdReference"
+              "$ref": "#/$defs/UmlVisibilityEnum"
             }
           ],
-          "title": "Source"
+          "default": "public"
         },
-        "target": {
+        "send_event": {
           "anyOf": [
             {
               "$ref": "#/$defs/UmlOccurrenceSpecification"
@@ -802,7 +797,18 @@
               "$ref": "#/$defs/UmlIdReference"
             }
           ],
-          "title": "Target"
+          "title": "Send Event"
+        },
+        "receive_event": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlOccurrenceSpecification"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Receive Event"
         },
         "signature": {
           "anyOf": [
@@ -820,31 +826,63 @@
           "title": "Signature"
         },
         "arguments": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Arguments",
-          "type": "array"
-        },
-        "return_value": {
           "anyOf": [
             {
-              "type": "string"
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
             },
             {
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "Return Value"
+          "title": "Arguments"
+        },
+        "sort": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlMessageSortEnum"
+            }
+          ],
+          "default": "synchCall"
+        },
+        "kind": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlMessageKindEnum"
+            }
+          ],
+          "default": "complete"
         }
       },
       "required": [
-        "source",
-        "target"
+        "send_event",
+        "receive_event"
       ],
       "title": "UmlMessage",
       "type": "object"
+    },
+    "UmlMessageKindEnum": {
+      "enum": [
+        "complete",
+        "lost",
+        "found",
+        "unknown"
+      ],
+      "title": "UmlMessageKindEnum",
+      "type": "string"
+    },
+    "UmlMessageSortEnum": {
+      "enum": [
+        "synchCall",
+        "asynchCall",
+        "reply",
+        "create",
+        "delete"
+      ],
+      "title": "UmlMessageSortEnum",
+      "type": "string"
     },
     "UmlModelElements": {
       "properties": {
@@ -938,7 +976,7 @@
           "title": "Id",
           "type": "string"
         },
-        "lifeline": {
+        "covered": {
           "anyOf": [
             {
               "$ref": "#/$defs/UmlLifeline"
@@ -947,11 +985,11 @@
               "$ref": "#/$defs/UmlIdReference"
             }
           ],
-          "title": "Lifeline"
+          "title": "Covered"
         }
       },
       "required": [
-        "lifeline"
+        "covered"
       ],
       "title": "UmlOccurrenceSpecification",
       "type": "object"
@@ -962,18 +1000,18 @@
           "title": "Id",
           "type": "string"
         },
-        "covered": {
+        "fragments": {
           "items": {
             "anyOf": [
               {
-                "$ref": "#/$defs/UmlEnclosedLifelinePart"
+                "$ref": "#/$defs/UmlOccurrenceSpecification"
               },
               {
-                "$ref": "#/$defs/UmlIdReference"
+                "$ref": "#/$defs/UmlCombinedFragment"
               }
             ]
           },
-          "title": "Covered",
+          "title": "Fragments",
           "type": "array"
         },
         "guard": {
@@ -1010,6 +1048,14 @@
           "default": null,
           "title": "Name"
         },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
         "parameters": {
           "items": {
             "$ref": "#/$defs/UmlParameter"
@@ -1043,14 +1089,6 @@
           ],
           "default": null,
           "title": "Return Type"
-        },
-        "visibility": {
-          "allOf": [
-            {
-              "$ref": "#/$defs/UmlVisibilityEnum"
-            }
-          ],
-          "default": "public"
         },
         "is_static": {
           "anyOf": [
@@ -1158,6 +1196,14 @@
           "default": null,
           "title": "Name"
         },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
         "type": {
           "anyOf": [
             {
@@ -1206,6 +1252,14 @@
           "default": null,
           "title": "Name"
         },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
         "type": {
           "anyOf": [
             {
@@ -1252,6 +1306,14 @@
           ],
           "default": null,
           "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
         },
         "supplier": {
           "anyOf": [

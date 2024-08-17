@@ -17,8 +17,7 @@ from pydantic_model import (
     UmlInteraction,
     UmlInteractionOperatorEnum,
     UmlOperand, 
-    UmlEnclosedLifelinePart,
-    UmlCombinedFragment
+    UmlCombinedFragment,
 )
 
 
@@ -98,91 +97,95 @@ generalization1 = UmlGeneralization(
     general=UmlIdReference(idref="interface1"),
 )
 
-lifeline1 = UmlLifeline(
+
+# Define classes
+person_class = UmlClass(id="class_person", name="Person")
+address_class = UmlClass(id="class_adds", name="Address")
+
+# Define lifelines
+lifeline_person = UmlLifeline(
     id="lifeline1",
     name="PersonLifeline",
-    represents=UmlIdReference(idref="class1")
+    represents=person_class
 )
 
-lifeline2 = UmlLifeline(
+lifeline_address = UmlLifeline(
     id="lifeline2",
     name="AddressLifeline",
     represents=UmlIdReference(idref="class2")
 )
 
-# Define occurrences
+# Define occurrence specifications
 occurrence1 = UmlOccurrenceSpecification(
-    id="occurrence1", lifeline=UmlIdReference(idref="lifeline1")
+    id="occurrence1",
+    covered=lifeline_person
 )
 
 occurrence2 = UmlOccurrenceSpecification(
-    id="occurrence2", lifeline=UmlIdReference(idref="lifeline2")
+    id="occurrence2",
+    covered=UmlIdReference(idref="lifeline2")
 )
+
+# Define operations
+get_address_operation = UmlOperation(id="op1", name="getAddress", return_type=address_class)
+return_address_operation = UmlOperation(id="op2", name="returnAddress", return_type=person_class)
 
 # Define messages between lifelines
-message1 = UmlMessage(
+message_request = UmlMessage(
     id="message1",
     name="RequestAddress",
-    source=UmlIdReference(idref="occurrence1"),
-    target=UmlIdReference(idref="occurrence2"),
-    signature=UmlOperation(id="op1", name="getAddress")
+    send_event=occurrence1,
+    receive_event=occurrence2,
+    signature=get_address_operation
 )
 
-message2 = UmlMessage(
+message_return = UmlMessage(
     id="message2",
     name="ReturnAddress",
-    source=UmlIdReference(idref="occurrence2"),
-    target=UmlIdReference(idref="occurrence1"),
-    signature=UmlOperation(id="op2", name="returnAddress")
+    send_event=UmlIdReference(idref="occurrence2"),
+    receive_event=UmlIdReference(idref="occurrence1"),
+    signature=UmlIdReference(idref="op2")
 )
 
-# Define enclosed lifeline parts
-enclosed_part1 = UmlEnclosedLifelinePart(
-    id="enclosedPart1",
-    lifeline=UmlIdReference(idref="lifeline1"),
-    occurences=[occurrence1],
-    enclosed_by=UmlIdReference(idref="combinedFragment1")
+# Define fragments and operands
+fragment1 = UmlCombinedFragment(
+    id="fragment1",
+    name="CombinedFragment",
+    operator=UmlInteractionOperatorEnum.ALT,
+    covered=[lifeline_person, UmlIdReference(idref="lifeline2")]
 )
 
-enclosed_part2 = UmlEnclosedLifelinePart(
-    id="enclosedPart2",
-    lifeline=UmlIdReference(idref="lifeline2"),
-    occurences=[occurrence2],
-    enclosed_by=UmlIdReference(idref="combinedFragment1")
-)
-
-lifeline1.covered_by = [enclosed_part1]
-lifeline2.covered_by = [enclosed_part2]
-
-
-# Define operands that enclose the lifeline parts
 operand1 = UmlOperand(
     id="operand1",
     guard="addressExists",
-    covered=[UmlIdReference(idref="enclosedPart1"), UmlIdReference(idref="enclosedPart2")]
+    fragments=[occurrence1, UmlOccurrenceSpecification(id="occurrence3", covered=UmlIdReference(idref="lifeline2"))]
 )
 
-# Define a combined fragment that includes the operand
-combined_fragment = UmlCombinedFragment(
-    id="combinedFragment1",
-    interaction_operator=UmlInteractionOperatorEnum.ALT,
-    operands=[operand1]
+operand2 = UmlOperand(
+    id="operand2",
+    guard="addressNotExists",
+    fragments=[occurrence2, UmlOccurrenceSpecification(id="occurrence4", covered=UmlIdReference(idref="lifeline2")), UmlOccurrenceSpecification(id="some_occurence_name", covered=UmlIdReference(idref="lifeline1"))]
 )
 
-# Define the interaction that includes the lifelines, messages, and combined fragment
+# Add operands to the main fragment
+fragment1.operands.append(operand1)
+fragment1.operands.append(operand2)
+
+# Define the interaction
 interaction = UmlInteraction(
     id="interaction1",
     name="PersonAddressInteraction",
-    lifelines=[lifeline1, lifeline2],
-    messages=[message1, message2],
-    combined_fragments=[combined_fragment]
+    lifelines=[lifeline_person, lifeline_address],
+    messages=[message_request, message_return],
+    fragments=[UmlOccurrenceSpecification(covered=UmlIdReference(idref="lifeline1")), fragment1, occurrence1, occurrence2]
 )
+
 
 # Combine everything into a UML model
 uml_model = UmlModel(
     id="model1",
     elements=UmlModelElements(
-        classes=[class1, class2, UmlClass(id="class1", name="Person"), UmlClass(id="class2", name="Address"),],
+        classes=[class1, class2, person_class, address_class],
         interfaces=[interface1],
         associations=[association1],
         generalizations=[generalization1],

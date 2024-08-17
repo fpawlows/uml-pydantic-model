@@ -1,7 +1,7 @@
 import json
 import uuid
-from typing import List, Optional, Union, Type
-from pydantic import BaseModel, Field, field_serializer, field_validator
+from typing import List, Optional, Union, Type, Dict, Any
+from pydantic import BaseModel, Field, field_serializer, model_validator
 from enum import Enum
 
 
@@ -86,6 +86,7 @@ class UmlElement(BaseModel):
 
 class UmlNamedElement(UmlElement):
     name: Optional[str] = None
+    visibility: UmlVisibilityEnum = UmlVisibilityEnum.PUBLIC
 
 
 class UmlAttribute(UmlNamedElement):
@@ -97,7 +98,6 @@ class UmlAttribute(UmlNamedElement):
         "UmlEnumeration",
         "UmlIdReference",
     ]
-    visibility: UmlVisibilityEnum = UmlVisibilityEnum.PUBLIC
     is_static: Optional[bool] = None
     is_ordered: Optional[bool] = None
     is_unique: Optional[bool] = None
@@ -156,7 +156,6 @@ class UmlOperation(UmlNamedElement):
             "UmlIdReference",
         ]
     ] = None
-    visibility: UmlVisibilityEnum = UmlVisibilityEnum.PUBLIC
     is_static: Optional[bool] = None
     is_ordered: Optional[bool] = None
     is_unique: Optional[bool] = None
@@ -183,7 +182,6 @@ class UmlOperation(UmlNamedElement):
 
 
 class UmlClassifier(UmlNamedElement):
-    visibility: UmlVisibilityEnum = UmlVisibilityEnum.PUBLIC
     attributes: List[UmlAttribute] = Field(default_factory=list)
     operations: List[UmlOperation] = Field(default_factory=list)
 
@@ -334,70 +332,35 @@ class UmlGeneralization(UmlNamedElement):
 
 
 class UmlOccurrenceSpecification(UmlElement):
-    lifeline: Union["UmlLifeline", "UmlIdReference"]
-
-    @field_serializer("lifeline")
-    def lifeline_to_json(lifeline: Union["UmlLifeline", "UmlIdReference"]) -> dict:
-        return serialize_field_to_id_reference(lifeline)
-
-
-class UmlEnclosedLifelinePart(UmlOccurrenceSpecification):
-    """
-    Represents events happening on some part of particular lifeline, e.g. message sending, message receiving, combined fragment, etc.
-    Preserves order of events.
-    """
-
-    occurences: List["UmlOccurrenceSpecification"] = Field(default_factory=list)
-    enclosed_by: Optional[Union["UmlCoveringFragment", "UmlIdReference"]] = None
-
-    @field_validator("occurences")
-    def validate_occurences(cls, occurences: List["UmlOccurrenceSpecification"]):
-        if not occurences:
-            raise ValueError("Occurences list cannot be empty.")
-
-        all_occurences_lifelines = [occurence.lifeline for occurence in occurences]
-        if len(set(all_occurences_lifelines)) > 1:
-            raise ValueError("All occurences must be on the same lifeline.")
-
-        if not all(
-            occurence.lifeline == occurences[0].lifeline for occurence in occurences
-        ):
-            raise ValueError("All occurences must be on the same lifeline.")
-
-        return occurences
-
-    @field_serializer("enclosed_by")
-    def enclosed_by_to_json(
-        enclosed_by: Optional[Union["UmlCoveringFragment", "UmlIdReference"]]
-    ) -> dict:
-        return serialize_field_to_id_reference(enclosed_by)
-
-
-class UmlCoveringFragment(UmlElement):
-    covered: List[Union["UmlEnclosedLifelinePart", "UmlIdReference"]] = Field(
-        default_factory=list
-    )
+    covered: Union["UmlLifeline", "UmlIdReference"]
 
     @field_serializer("covered")
     def covered_to_json(
-        covered: List[Union["UmlEnclosedLifelinePart", "UmlIdReference"]]
+        covered: Union["UmlLifeline", "UmlIdReference"]
+    ) -> dict:
+        return serialize_field_to_id_reference(covered)
+    
+
+class UmlCombinedFragment(UmlNamedElement):
+    covered: List[Union["UmlLifeline", "UmlIdReference"]] = Field(default_factory=list)
+    operands: List["UmlOperand"] = Field(default_factory=list)
+    operator: UmlInteractionOperatorEnum
+
+    @field_serializer("covered")
+    def covered_to_json(
+        covered: List[Union["UmlLifeline", "UmlIdReference"]]
     ) -> List[dict]:
-        return [serialize_field_to_id_reference(fragment) for fragment in covered]
+        return [serialize_field_to_id_reference(lifeline) for lifeline in covered]
+    
 
-
-class UmlOperand(UmlCoveringFragment):
+class UmlOperand(UmlElement):
+    fragments: List[Union["UmlOccurrenceSpecification", "UmlCombinedFragment"]] = Field(
+        default_factory=list
+    )
     guard: Optional[str] = None
 
 
-class UmlCombinedFragment(UmlCoveringFragment):
-    interaction_operator: UmlInteractionOperatorEnum
-    operands: List["UmlOperand"] = Field(default_factory=list)
-
-
 class UmlLifeline(UmlNamedElement):
-    covered_by: List[
-        Union["UmlEnclosedLifelinePart", "UmlOccurrenceSpecification"]
-    ] = Field(default_factory=list)
     represents: Union["UmlClass", "UmlInterface", "UmlIdReference"]
 
     @field_serializer("represents")
@@ -407,36 +370,60 @@ class UmlLifeline(UmlNamedElement):
         return serialize_field_to_id_reference(represents)
 
 
+class UmlMessageSortEnum(str, Enum):
+    SYNCH_CALL = "synchCall"
+    ASYNCH_CALL = "asynchCall"
+    REPLY = "reply"
+    CREATE = "create"
+    DELETE = "delete"
+
+
+class UmlMessageKindEnum(str, Enum):
+    COMPLETE = "complete"
+    LOST = "lost"
+    FOUND = "found"
+    UNKNOWN = "unknown"
+
+
 class UmlMessage(UmlNamedElement):
-    source: Union["UmlOccurrenceSpecification", "UmlIdReference"]
-    target: Union["UmlOccurrenceSpecification", "UmlIdReference"]
+    send_event: Union["UmlOccurrenceSpecification", "UmlIdReference"]
+    receive_event: Union["UmlOccurrenceSpecification", "UmlIdReference"]
     signature: Optional[Union["UmlOperation", "UmlIdReference"]] = None
-    arguments: List[str] = Field(default_factory=list)
-    return_value: Optional[str] = None
+    arguments: Optional[List[str]] = Field(default_factory=list)
+    sort: UmlMessageSortEnum = UmlMessageSortEnum.SYNCH_CALL
+    kind: UmlMessageKindEnum = UmlMessageKindEnum.COMPLETE
+    
 
-    @field_serializer("source")
-    def source_to_json(
-        source: Union["UmlOccurrenceSpecification", "UmlIdReference"]
+    @field_serializer("send_event")
+    def send_event_to_json(
+        send_event: Union["UmlOccurrenceSpecification", "UmlIdReference"]
     ) -> dict:
-        return serialize_field_to_id_reference(source)
-
-    @field_serializer("target")
-    def target_to_json(
-        target: Union["UmlOccurrenceSpecification", "UmlIdReference"]
+        return serialize_field_to_id_reference(send_event)
+    
+    @field_serializer("receive_event")
+    def receive_event_to_json(
+        receive_event: Union["UmlOccurrenceSpecification", "UmlIdReference"]
     ) -> dict:
-        return serialize_field_to_id_reference(target)
-
+        return serialize_field_to_id_reference(receive_event)
+    
     @field_serializer("signature")
     def signature_to_json(
-        signature: Optional[Union["UmlOperation", "UmlIdReference"]]
+        signature: Union["UmlOperation", "UmlIdReference"]
     ) -> dict:
         return serialize_field_to_id_reference(signature)
+    
 
 
 class UmlInteraction(UmlNamedElement):
     lifelines: List[UmlLifeline] = Field(default_factory=list)
     messages: List[UmlMessage] = Field(default_factory=list)
-    combined_fragments: List[UmlCombinedFragment] = Field(default_factory=list)
+    fragments: List[Union["UmlOccurrenceSpecification", "UmlCombinedFragment"]] = Field(
+        default_factory=list
+    )
+    """
+    Fragments are used to represent the different types of events that can occur in an interaction.
+    Their order is important and they can be nested.
+    """
 
 
 class UmlModelElements(BaseModel):
@@ -452,8 +439,41 @@ class UmlModelElements(BaseModel):
     interactions: List[UmlInteraction] = Field(default_factory=list)
 
 
+
+    @model_validator(mode="before")
+    def check_unique_ids(cls, values: Dict[str, Any]) -> Dict[str, Any]:
+        id_map: Dict[str, UmlElement] = {}
+
+        def collect_ids(element: UmlElement):
+            if isinstance(element, UmlElement):
+                if element.id in id_map:
+                    if id_map[element.id] != element:
+                        raise ValueError(f"Duplicate id found with different objects: {element.id}")
+                else:
+                    id_map[element.id] = element
+
+                # Recursively check nested objects like attributes, operations, etc.
+                for field_name, field_value in element.__dict__.items():
+                    if isinstance(field_value, list):
+                        for item in field_value:
+                            collect_ids(item)
+                    elif isinstance(field_value, UmlElement):
+                        collect_ids(field_value)
+
+        # Iterate through each type of element in UmlModelElements
+        for element_list in values.values():
+            if isinstance(element_list, list):
+                for element in element_list:
+                    collect_ids(element)
+
+        return values
+    
+
+
 class UmlModel(UmlElement):
     elements: UmlModelElements
+
+
 
 
 print("\nmodel.model_json_schema")
