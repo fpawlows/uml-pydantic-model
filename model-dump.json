@@ -8,7 +8,7 @@
         "visibility": "public",
         "attributes": [
           {
-            "id": "3fcd34aa-e453-48b0-86bb-c9383714386a",
+            "id": "f3306f26-5896-40ca-a388-6e7885ba44f6",
             "name": "name",
             "type": {
               "idref": "type1"
@@ -23,7 +23,7 @@
             "is_derived_union": null
           },
           {
-            "id": "5791ddb4-d816-4a71-a7e6-680fea689522",
+            "id": "6f6adfa2-50f2-441d-9c3f-d260089e1133",
             "name": "age",
             "type": {
               "idref": "type2"
@@ -40,7 +40,7 @@
         ],
         "operations": [
           {
-            "id": "47be038a-5905-4e93-a44a-622767aa59bf",
+            "id": "1fe2112a-2390-4afa-a507-3172cf845abf",
             "name": "getName",
             "parameters": [],
             "return_type": {
@@ -66,7 +66,7 @@
         "visibility": "public",
         "attributes": [
           {
-            "id": "28763f11-73f3-4566-9363-5586b4c058c9",
+            "id": "41083eb4-b22a-4f20-abc6-9ec40e9e5f9f",
             "name": "street",
             "type": {
               "idref": "type1"
@@ -81,7 +81,7 @@
             "is_derived_union": null
           },
           {
-            "id": "61db9617-9864-4a16-b7b8-958fdcffa517",
+            "id": "89ab03dd-0e82-449e-8af6-4af175a18196",
             "name": "zipcode",
             "type": {
               "idref": "type2"
@@ -99,6 +99,24 @@
         "operations": [],
         "generalizations": [],
         "interfaces": []
+      },
+      {
+        "id": "class1",
+        "name": "Person",
+        "visibility": "public",
+        "attributes": [],
+        "operations": [],
+        "generalizations": [],
+        "interfaces": []
+      },
+      {
+        "id": "class2",
+        "name": "Address",
+        "visibility": "public",
+        "attributes": [],
+        "operations": [],
+        "generalizations": [],
+        "interfaces": []
       }
     ],
     "interfaces": [
@@ -109,7 +127,7 @@
         "attributes": [],
         "operations": [
           {
-            "id": "88fddbeb-38a1-4141-ac25-fce9c02c3d79",
+            "id": "4d1b4d25-fbf3-4d2d-8793-b2c638ada5d3",
             "name": "getAge",
             "parameters": [],
             "return_type": {
@@ -165,7 +183,25 @@
           {
             "id": "lifeline1",
             "name": "PersonLifeline",
-            "covered_by": [],
+            "covered_by": [
+              {
+                "id": "enclosedPart1",
+                "lifeline": {
+                  "idref": "lifeline1"
+                },
+                "occurences": [
+                  {
+                    "id": "occurrence1",
+                    "lifeline": {
+                      "idref": "lifeline1"
+                    }
+                  }
+                ],
+                "enclosed_by": {
+                  "idref": "combinedFragment1"
+                }
+              }
+            ],
             "represents": {
               "idref": "class1"
             }
@@ -173,7 +209,25 @@
           {
             "id": "lifeline2",
             "name": "AddressLifeline",
-            "covered_by": [],
+            "covered_by": [
+              {
+                "id": "enclosedPart2",
+                "lifeline": {
+                  "idref": "lifeline2"
+                },
+                "occurences": [
+                  {
+                    "id": "occurrence2",
+                    "lifeline": {
+                      "idref": "lifeline2"
+                    }
+                  }
+                ],
+                "enclosed_by": {
+                  "idref": "combinedFragment1"
+                }
+              }
+            ],
             "represents": {
               "idref": "class2"
             }
@@ -184,19 +238,54 @@
             "id": "message1",
             "name": "RequestAddress",
             "source": {
-              "idref": "occ1"
+              "idref": "occurrence1"
             },
             "target": {
-              "idref": "occ2"
+              "idref": "occurrence2"
             },
             "signature": {
               "idref": "op1"
             },
             "arguments": [],
             "return_value": null
+          },
+          {
+            "id": "message2",
+            "name": "ReturnAddress",
+            "source": {
+              "idref": "occurrence2"
+            },
+            "target": {
+              "idref": "occurrence1"
+            },
+            "signature": {
+              "idref": "op2"
+            },
+            "arguments": [],
+            "return_value": null
           }
         ],
-        "combined_fragments": []
+        "combined_fragments": [
+          {
+            "id": "combinedFragment1",
+            "covered": [],
+            "interaction_operator": "alt",
+            "operands": [
+              {
+                "id": "operand1",
+                "covered": [
+                  {
+                    "idref": "enclosedPart1"
+                  },
+                  {
+                    "idref": "enclosedPart2"
+                  }
+                ],
+                "guard": "addressExists"
+              }
+            ]
+          }
+        ]
       }
     ]
   }

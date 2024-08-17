@@ -492,10 +492,14 @@
               "$ref": "#/$defs/UmlCoveringFragment"
             },
             {
+              "$ref": "#/$defs/UmlIdReference"
+            },
+            {
               "type": "null"
             }
           ],
-          "default": null
+          "default": null,
+          "title": "Enclosed By"
         }
       },
       "required": [

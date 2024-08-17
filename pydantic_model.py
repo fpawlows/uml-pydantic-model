@@ -6,8 +6,11 @@ from enum import Enum
 
 
 def serialize_field_to_id_reference(
-    field: Union["UmlElement", "UmlIdReference"]
+    field: Optional[Union["UmlElement", "UmlIdReference"]]
 ) -> dict:
+    if field is None:
+        return None
+    
     return (
         UmlIdReference.from_uml_element(field).model_dump()
         if isinstance(field, UmlElement)
@@ -23,7 +26,18 @@ class UmlIdReference(BaseModel):
         cls: Type["UmlIdReference"], element: "UmlElement"
     ) -> "UmlIdReference":
         return cls(idref=element.id)
-
+    
+    def __hash__(self) -> int:
+        return hash(self.idref)
+    
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, UmlElement):
+            return self.idref == other.id
+        
+        elif isinstance(other, UmlIdReference):
+            return self.idref == other.idref
+        
+        return False
 
 class UmlVisibilityEnum(str, Enum):
     PUBLIC = "public"
@@ -334,7 +348,7 @@ class UmlEnclosedLifelinePart(UmlOccurrenceSpecification):
     """
 
     occurences: List["UmlOccurrenceSpecification"] = Field(default_factory=list)
-    enclosed_by: Optional["UmlCoveringFragment"] = None
+    enclosed_by: Optional[Union["UmlCoveringFragment", "UmlIdReference"]] = None
 
     @field_validator("occurences")
     def validate_occurences(cls, occurences: List["UmlOccurrenceSpecification"]):
@@ -351,6 +365,12 @@ class UmlEnclosedLifelinePart(UmlOccurrenceSpecification):
             raise ValueError("All occurences must be on the same lifeline.")
 
         return occurences
+
+    @field_serializer("enclosed_by")
+    def enclosed_by_to_json(
+        enclosed_by: Optional[Union["UmlCoveringFragment", "UmlIdReference"]]
+    ) -> dict:
+        return serialize_field_to_id_reference(enclosed_by)
 
 
 class UmlCoveringFragment(UmlElement):
