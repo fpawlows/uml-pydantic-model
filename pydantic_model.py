@@ -339,7 +339,24 @@ class UmlOccurrenceSpecification(UmlElement):
         covered: Union["UmlLifeline", "UmlIdReference"]
     ) -> dict:
         return serialize_field_to_id_reference(covered)
+
+
+class UmlInteractionUse(UmlNamedElement):
+    interaction: Union["UmlInteraction", "UmlIdReference"]
+    covered: List[Union["UmlLifeline", "UmlIdReference"]] = Field(default_factory=list)
+
+    @field_serializer("interaction")
+    def interaction_to_json(
+        interaction: Union["UmlInteraction", "UmlIdReference"]
+    ) -> dict:
+        return serialize_field_to_id_reference(interaction)
     
+    @field_serializer("covered")
+    def covered_to_json(
+        covered: List[Union["UmlLifeline", "UmlIdReference"]]
+    ) -> List[dict]:
+        return [serialize_field_to_id_reference(lifeline) for lifeline in covered]
+
 
 class UmlCombinedFragment(UmlNamedElement):
     covered: List[Union["UmlLifeline", "UmlIdReference"]] = Field(default_factory=list)
@@ -417,7 +434,7 @@ class UmlMessage(UmlNamedElement):
 class UmlInteraction(UmlNamedElement):
     lifelines: List[UmlLifeline] = Field(default_factory=list)
     messages: List[UmlMessage] = Field(default_factory=list)
-    fragments: List[Union["UmlOccurrenceSpecification", "UmlCombinedFragment"]] = Field(
+    fragments: List[Union["UmlOccurrenceSpecification", "UmlCombinedFragment", "UmlInteractionUse"]] = Field(
         default_factory=list
     )
     """
@@ -467,11 +484,91 @@ class UmlModelElements(BaseModel):
                     collect_ids(element)
 
         return values
+
+
+class UmlDiagram(UmlNamedElement):
+    model: Union["UmlModel", "UmlIdReference"]
+    name: Optional[str] = None
+    description: Optional[str] = None
+
+    @field_serializer("model")
+    def model_to_json(model: Union["UmlModel", "UmlIdReference"]) -> dict:
+        return serialize_field_to_id_reference(model)
     
+
+class UmlSequenceDiagramElements(BaseModel):
+    interactions: List[Union["UmlInteraction","UmlIdReference"]] = Field(default_factory=list)
+
+    @field_serializer("interactions")
+    def interactions_to_json(interactions: List[Union["UmlInteraction","UmlIdReference"]]) -> List[dict]:
+        return [serialize_field_to_id_reference(interaction) for interaction in interactions]
+
+
+class UmlSequenceDiagram(UmlDiagram):
+    elements: UmlSequenceDiagramElements
+
+
+class UmlClassDiagramElements(BaseModel):
+    classes: List[Union["UmlClass","UmlIdReference"]] = Field(default_factory=list)
+    interfaces: List[Union["UmlInterface","UmlIdReference"]] = Field(default_factory=list)
+    dataTypes: List[Union["UmlDataType","UmlIdReference"]] = Field(default_factory=list)
+    enumerations: List[Union["UmlEnumeration","UmlIdReference"]] = Field(default_factory=list)
+    primitiveTypes: List[Union["UmlPrimitiveType","UmlIdReference"]] = Field(default_factory=list)
+    associations: List[Union["UmlAssociation","UmlIdReference"]] = Field(default_factory=list)
+    generalizations: List[Union["UmlGeneralization","UmlIdReference"]] = Field(default_factory=list)
+    dependencies: List[Union["UmlDependency","UmlIdReference"]] = Field(default_factory=list)
+    realizations: List[Union["UmlRealization","UmlIdReference"]] = Field(default_factory=list)
+
+    @field_serializer("classes")
+    def classes_to_json(classes: List[Union["UmlClass","UmlIdReference"]]) -> List[dict]:
+        return [serialize_field_to_id_reference(class_) for class_ in classes]
+                
+    @field_serializer("interfaces")
+    def interfaces_to_json(interfaces: List[Union["UmlInterface","UmlIdReference"]]) -> List[dict]:
+        return [serialize_field_to_id_reference(interface) for interface in interfaces]
+                
+    @field_serializer("dataTypes")
+    def dataTypes_to_json(dataTypes: List[Union["UmlDataType","UmlIdReference"]]) -> List[dict]:
+        return [serialize_field_to_id_reference(dataType) for dataType in dataTypes]
+                
+    @field_serializer("enumerations")
+    def enumerations_to_json(enumerations: List[Union["UmlEnumeration","UmlIdReference"]]) -> List[dict]:
+        return [serialize_field_to_id_reference(enumeration) for enumeration in enumerations]
+                
+    @field_serializer("primitiveTypes")
+    def primitiveTypes_to_json(primitiveTypes: List[Union["UmlPrimitiveType","UmlIdReference"]]) -> List[dict]:
+        return [serialize_field_to_id_reference(primitiveType) for primitiveType in primitiveTypes]
+                
+    @field_serializer("associations")
+    def associations_to_json(associations: List[Union["UmlAssociation","UmlIdReference"]]) -> List[dict]:
+        return [serialize_field_to_id_reference(association) for association in associations]
+                
+    @field_serializer("generalizations")
+    def generalizations_to_json(generalizations: List[Union["UmlGeneralization","UmlIdReference"]]) -> List[dict]:
+        return [serialize_field_to_id_reference(generalization) for generalization in generalizations]
+                
+    @field_serializer("dependencies")
+    def dependencies_to_json(dependencies: List[Union["UmlDependency","UmlIdReference"]]) -> List[dict]:
+        return [serialize_field_to_id_reference(dependency) for dependency in dependencies]
+                
+    @field_serializer("realizations")
+    def realizations_to_json(realizations: List[Union["UmlRealization","UmlIdReference"]]) -> List[dict]:
+        return [serialize_field_to_id_reference(realization) for realization in realizations]
+
+
+class UmlClassDiagram(UmlDiagram):
+    elements: UmlClassDiagramElements
+
+
+class UmlModelDiagrams(BaseModel):
+    class_diagrams: List[Union[UmlClassDiagram, UmlIdReference]] = Field(default_factory=list)
+    sequence_diagrams: List[Union[UmlSequenceDiagram, UmlIdReference]] = Field(default_factory=list)
 
 
 class UmlModel(UmlElement):
     elements: UmlModelElements
+    diagrams: UmlModelDiagrams
+
 
 
 

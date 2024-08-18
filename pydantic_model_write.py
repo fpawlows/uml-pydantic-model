@@ -18,6 +18,13 @@ from pydantic_model import (
     UmlInteractionOperatorEnum,
     UmlOperand, 
     UmlCombinedFragment,
+    UmlClassDiagram,
+    UmlClassDiagramElements,
+    UmlSequenceDiagram,
+    UmlSequenceDiagramElements,
+    UmlInteractionUse,
+    UmlDependency,
+    UmlModelDiagrams
 )
 
 
@@ -167,6 +174,18 @@ operand2 = UmlOperand(
     fragments=[occurrence2, UmlOccurrenceSpecification(id="occurrence4", covered=UmlIdReference(idref="lifeline2")), UmlOccurrenceSpecification(id="some_occurence_name", covered=UmlIdReference(idref="lifeline1"))]
 )
 
+
+mock_interaction = UmlInteraction(
+    id="mock_interaction",
+    name="MockInteraction",
+)
+
+mock_interaction_use = UmlInteractionUse(
+    id="mock_interaction_use",
+    name="MockInteractionUse",
+    interaction=mock_interaction
+)
+
 # Add operands to the main fragment
 fragment1.operands.append(operand1)
 fragment1.operands.append(operand2)
@@ -177,8 +196,52 @@ interaction = UmlInteraction(
     name="PersonAddressInteraction",
     lifelines=[lifeline_person, lifeline_address],
     messages=[message_request, message_return],
-    fragments=[UmlOccurrenceSpecification(covered=UmlIdReference(idref="lifeline1")), fragment1, occurrence1, occurrence2]
+    fragments=[UmlOccurrenceSpecification(covered=UmlIdReference(idref="lifeline1")), fragment1, occurrence1, occurrence2, UmlOccurrenceSpecification(covered=UmlIdReference(idref="lifeline2")), mock_interaction_use]
 )
+
+
+class_diagram = UmlClassDiagram(
+    model=UmlIdReference(idref="model1"),
+    id="class_diagram",
+    elements=UmlClassDiagramElements(
+        classes=[person_class, address_class],
+        associations=[association1],
+        generalizations=[generalization1],
+        dependencies=[UmlIdReference(idref="dep1")]
+    )
+)
+
+
+sequence_diagram = UmlSequenceDiagram(
+    model=UmlIdReference(idref="model1"),
+    id="sequence_diagram",
+    elements=UmlSequenceDiagramElements(
+        interactions=[mock_interaction]
+    )
+)
+
+
+sequence_diagram_2 = UmlSequenceDiagram(
+    model=UmlIdReference(idref="model1"),
+    elements=UmlSequenceDiagramElements(
+        interactions=[mock_interaction, interaction]
+    )
+)
+
+
+sequence_diagram_3 = UmlSequenceDiagram(
+    model=UmlIdReference(idref="model1"),
+    elements=UmlSequenceDiagramElements(
+        interactions=[interaction, mock_interaction]
+    )
+)
+
+
+diagrams = UmlModelDiagrams(
+    class_diagrams=[class_diagram],
+    sequence_diagrams=[sequence_diagram, sequence_diagram_2, sequence_diagram_3]
+)
+
 
 
 # Combine everything into a UML model
@@ -189,8 +252,10 @@ uml_model = UmlModel(
         interfaces=[interface1],
         associations=[association1],
         generalizations=[generalization1],
-        interactions=[interaction]
+        interactions=[interaction],
+        dependencies=[UmlDependency(id="dep1", name="Dependency1", client=person_class, supplier=address_class)],
     ),
+    diagrams=diagrams
 )
 
 

@@ -332,6 +332,198 @@
       "title": "UmlClass",
       "type": "object"
     },
+    "UmlClassDiagram": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlModel"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Model"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "elements": {
+          "$ref": "#/$defs/UmlClassDiagramElements"
+        }
+      },
+      "required": [
+        "model",
+        "elements"
+      ],
+      "title": "UmlClassDiagram",
+      "type": "object"
+    },
+    "UmlClassDiagramElements": {
+      "properties": {
+        "classes": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlClass"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Classes",
+          "type": "array"
+        },
+        "interfaces": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlInterface"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Interfaces",
+          "type": "array"
+        },
+        "dataTypes": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlDataType"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Datatypes",
+          "type": "array"
+        },
+        "enumerations": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlEnumeration"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Enumerations",
+          "type": "array"
+        },
+        "primitiveTypes": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlPrimitiveType"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Primitivetypes",
+          "type": "array"
+        },
+        "associations": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlAssociation"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Associations",
+          "type": "array"
+        },
+        "generalizations": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlGeneralization"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Generalizations",
+          "type": "array"
+        },
+        "dependencies": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlDependency"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Dependencies",
+          "type": "array"
+        },
+        "realizations": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlRealization"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Realizations",
+          "type": "array"
+        }
+      },
+      "title": "UmlClassDiagramElements",
+      "type": "object"
+    },
     "UmlCombinedFragment": {
       "properties": {
         "id": {
@@ -641,6 +833,9 @@
               },
               {
                 "$ref": "#/$defs/UmlCombinedFragment"
+              },
+              {
+                "$ref": "#/$defs/UmlInteractionUse"
               }
             ]
           },
@@ -670,6 +865,64 @@
       ],
       "title": "UmlInteractionOperatorEnum",
       "type": "string"
+    },
+    "UmlInteractionUse": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
+        "interaction": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlInteraction"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Interaction"
+        },
+        "covered": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlLifeline"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Covered",
+          "type": "array"
+        }
+      },
+      "required": [
+        "interaction"
+      ],
+      "title": "UmlInteractionUse",
+      "type": "object"
     },
     "UmlInterface": {
       "properties": {
@@ -883,6 +1136,60 @@
       ],
       "title": "UmlMessageSortEnum",
       "type": "string"
+    },
+    "UmlModel": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "elements": {
+          "$ref": "#/$defs/UmlModelElements"
+        },
+        "diagrams": {
+          "$ref": "#/$defs/UmlModelDiagrams"
+        }
+      },
+      "required": [
+        "elements",
+        "diagrams"
+      ],
+      "title": "UmlModel",
+      "type": "object"
+    },
+    "UmlModelDiagrams": {
+      "properties": {
+        "class_diagrams": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlClassDiagram"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Class Diagrams",
+          "type": "array"
+        },
+        "sequence_diagrams": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlSequenceDiagram"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Sequence Diagrams",
+          "type": "array"
+        }
+      },
+      "title": "UmlModelDiagrams",
+      "type": "object"
     },
     "UmlModelElements": {
       "properties": {
@@ -1351,6 +1658,86 @@
       "title": "UmlRealization",
       "type": "object"
     },
+    "UmlSequenceDiagram": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlModel"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Model"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "elements": {
+          "$ref": "#/$defs/UmlSequenceDiagramElements"
+        }
+      },
+      "required": [
+        "model",
+        "elements"
+      ],
+      "title": "UmlSequenceDiagram",
+      "type": "object"
+    },
+    "UmlSequenceDiagramElements": {
+      "properties": {
+        "interactions": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlInteraction"
+              },
+              {
+                "$ref": "#/$defs/UmlIdReference"
+              }
+            ]
+          },
+          "title": "Interactions",
+          "type": "array"
+        }
+      },
+      "title": "UmlSequenceDiagramElements",
+      "type": "object"
+    },
     "UmlVisibilityEnum": {
       "enum": [
         "public",
@@ -1361,18 +1748,9 @@
       "type": "string"
     }
   },
-  "properties": {
-    "id": {
-      "title": "Id",
-      "type": "string"
-    },
-    "elements": {
-      "$ref": "#/$defs/UmlModelElements"
+  "allOf": [
+    {
+      "$ref": "#/$defs/UmlModel"
     }
-  },
-  "required": [
-    "elements"
-  ],
-  "title": "UmlModel",
-  "type": "object"
+  ]
 }
