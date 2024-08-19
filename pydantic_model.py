@@ -565,7 +565,7 @@ class UmlModelDiagrams(BaseModel):
     sequence_diagrams: List[Union[UmlSequenceDiagram, UmlIdReference]] = Field(default_factory=list)
 
 
-class UmlModel(UmlElement):
+class UmlModel(UmlNamedElement):
     elements: UmlModelElements
     diagrams: UmlModelDiagrams
 

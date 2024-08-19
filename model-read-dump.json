@@ -1,5 +1,7 @@
 {
   "id": "model1",
+  "name": null,
+  "visibility": "public",
   "elements": {
     "classes": [
       {
@@ -8,7 +10,7 @@
         "visibility": "public",
         "attributes": [
           {
-            "id": "14cbe47d-7d70-4719-9d8a-bc4c31427bc4",
+            "id": "cce30108-74ca-49ac-871f-2fe2c69d9a85",
             "name": "name",
             "visibility": "public",
             "type": {
@@ -23,7 +25,7 @@
             "is_derived_union": null
           },
           {
-            "id": "a2f96390-adce-4c97-b45a-efd0cd60ed37",
+            "id": "1615eeef-652b-4cbd-894e-17f875cb5d22",
             "name": "age",
             "visibility": "public",
             "type": {
@@ -40,7 +42,7 @@
         ],
         "operations": [
           {
-            "id": "286cd215-1736-4fcf-b72c-bdd8d99e5a10",
+            "id": "9b7e7a81-4ef9-4dec-8933-f06f15b47b9c",
             "name": "getName",
             "visibility": "public",
             "parameters": [],
@@ -66,7 +68,7 @@
         "visibility": "public",
         "attributes": [
           {
-            "id": "0cc1a4b2-d82e-4b75-b3c5-b70d4dc8b34c",
+            "id": "2bceb0ed-8af6-46f3-bdbd-163fee9fb0a1",
             "name": "street",
             "visibility": "public",
             "type": {
@@ -81,7 +83,7 @@
             "is_derived_union": null
           },
           {
-            "id": "a9ffec55-9ecc-4c68-9da1-f1ae83dd05cf",
+            "id": "d229755e-4954-4c7f-be90-8d943e1ac6b8",
             "name": "zipcode",
             "visibility": "public",
             "type": {
@@ -127,7 +129,7 @@
         "attributes": [],
         "operations": [
           {
-            "id": "f2d71cdc-9064-4d9e-af7f-d2a2d02f6cc4",
+            "id": "01fd1af9-21db-45e3-b5d9-b30963bdd701",
             "name": "getAge",
             "visibility": "public",
             "parameters": [],
@@ -175,7 +177,19 @@
         }
       }
     ],
-    "dependencies": [],
+    "dependencies": [
+      {
+        "id": "dep1",
+        "name": "Dependency1",
+        "visibility": "public",
+        "supplier": {
+          "idref": "class_adds"
+        },
+        "client": {
+          "idref": "class_person"
+        }
+      }
+    ],
     "realizations": [],
     "interactions": [
       {
@@ -238,7 +252,7 @@
         ],
         "fragments": [
           {
-            "id": "3ba7441f-407a-4ec8-a624-b8adb23d9071",
+            "id": "6bd5d10a-cd58-4d62-a89b-267bfb7d24d9",
             "covered": {
               "idref": "lifeline1"
             }
@@ -312,8 +326,122 @@
             "covered": {
               "idref": "lifeline2"
             }
+          },
+          {
+            "id": "c5419bdf-dbc3-419a-8bf6-02175ac7e545",
+            "covered": {
+              "idref": "lifeline2"
+            }
+          },
+          {
+            "id": "mock_interaction_use",
+            "name": "MockInteractionUse",
+            "visibility": "public",
+            "interaction": {
+              "idref": "mock_interaction"
+            },
+            "covered": []
           }
         ]
+      }
+    ]
+  },
+  "diagrams": {
+    "class_diagrams": [
+      {
+        "id": "class_diagram",
+        "name": null,
+        "visibility": "public",
+        "model": {
+          "idref": "model1"
+        },
+        "description": null,
+        "elements": {
+          "classes": [
+            {
+              "idref": "class_person"
+            },
+            {
+              "idref": "class_adds"
+            }
+          ],
+          "interfaces": [],
+          "dataTypes": [],
+          "enumerations": [],
+          "primitiveTypes": [],
+          "associations": [
+            {
+              "idref": "assoc1"
+            }
+          ],
+          "generalizations": [
+            {
+              "idref": "gen1"
+            }
+          ],
+          "dependencies": [
+            {
+              "idref": "dep1"
+            }
+          ],
+          "realizations": []
+        }
+      }
+    ],
+    "sequence_diagrams": [
+      {
+        "id": "sequence_diagram",
+        "name": null,
+        "visibility": "public",
+        "model": {
+          "idref": "model1"
+        },
+        "description": null,
+        "elements": {
+          "interactions": [
+            {
+              "idref": "mock_interaction"
+            }
+          ]
+        }
+      },
+      {
+        "id": "e17b4161-ad6e-478c-94a2-81daf48db088",
+        "name": null,
+        "visibility": "public",
+        "model": {
+          "idref": "model1"
+        },
+        "description": null,
+        "elements": {
+          "interactions": [
+            {
+              "idref": "mock_interaction"
+            },
+            {
+              "idref": "interaction1"
+            }
+          ]
+        }
+      },
+      {
+        "id": "1f98bb09-e8a5-4b0c-b0ca-ff1dec32ef15",
+        "name": null,
+        "visibility": "public",
+        "model": {
+          "idref": "model1"
+        },
+        "description": null,
+        "elements": {
+          "interactions": [
+            {
+              "idref": "interaction1"
+            },
+            {
+              "idref": "mock_interaction"
+            }
+          ]
+        }
       }
     ]
   }

@@ -1143,6 +1143,26 @@
           "title": "Id",
           "type": "string"
         },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
         "elements": {
           "$ref": "#/$defs/UmlModelElements"
         },

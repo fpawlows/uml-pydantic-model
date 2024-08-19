@@ -1,5 +1,7 @@
 {
   "id": "model1",
+  "name": null,
+  "visibility": "public",
   "elements": {
     "classes": [
       {
@@ -8,7 +10,7 @@
         "visibility": "public",
         "attributes": [
           {
-            "id": "661e70a0-320c-4aa1-a192-f9875a17b2c4",
+            "id": "cce30108-74ca-49ac-871f-2fe2c69d9a85",
             "name": "name",
             "visibility": "public",
             "type": {
@@ -23,7 +25,7 @@
             "is_derived_union": null
           },
           {
-            "id": "caf2d382-5ff7-49a5-ab0d-efc94115a933",
+            "id": "1615eeef-652b-4cbd-894e-17f875cb5d22",
             "name": "age",
             "visibility": "public",
             "type": {
@@ -40,7 +42,7 @@
         ],
         "operations": [
           {
-            "id": "0caf1d74-f11a-4c0e-90ed-447309a33fd1",
+            "id": "9b7e7a81-4ef9-4dec-8933-f06f15b47b9c",
             "name": "getName",
             "visibility": "public",
             "parameters": [],
@@ -66,7 +68,7 @@
         "visibility": "public",
         "attributes": [
           {
-            "id": "f546553f-bb86-43f7-a9fe-7006e736d106",
+            "id": "2bceb0ed-8af6-46f3-bdbd-163fee9fb0a1",
             "name": "street",
             "visibility": "public",
             "type": {
@@ -81,7 +83,7 @@
             "is_derived_union": null
           },
           {
-            "id": "3b1b9303-ed70-4eba-8139-6dc4242b0086",
+            "id": "d229755e-4954-4c7f-be90-8d943e1ac6b8",
             "name": "zipcode",
             "visibility": "public",
             "type": {
@@ -127,7 +129,7 @@
         "attributes": [],
         "operations": [
           {
-            "id": "09697e7e-f6a2-49cc-903b-1b32d84b0450",
+            "id": "01fd1af9-21db-45e3-b5d9-b30963bdd701",
             "name": "getAge",
             "visibility": "public",
             "parameters": [],
@@ -250,7 +252,7 @@
         ],
         "fragments": [
           {
-            "id": "1b200d3f-ceb4-4018-826d-9e445949b8e5",
+            "id": "6bd5d10a-cd58-4d62-a89b-267bfb7d24d9",
             "covered": {
               "idref": "lifeline1"
             }
@@ -326,7 +328,7 @@
             }
           },
           {
-            "id": "4c7dccd4-b014-4da7-a2d9-e8df27b81b11",
+            "id": "c5419bdf-dbc3-419a-8bf6-02175ac7e545",
             "covered": {
               "idref": "lifeline2"
             }
@@ -404,7 +406,7 @@
         }
       },
       {
-        "id": "4319be84-a936-404a-9203-fad1cfc05d2d",
+        "id": "e17b4161-ad6e-478c-94a2-81daf48db088",
         "name": null,
         "visibility": "public",
         "model": {
@@ -423,7 +425,7 @@
         }
       },
       {
-        "id": "71221ab3-b00b-415b-8d1c-83cea2e20806",
+        "id": "1f98bb09-e8a5-4b0c-b0ca-ff1dec32ef15",
         "name": null,
         "visibility": "public",
         "model": {
