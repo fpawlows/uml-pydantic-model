@@ -10,7 +10,7 @@
         "visibility": "public",
         "attributes": [
           {
-            "id": "cce30108-74ca-49ac-871f-2fe2c69d9a85",
+            "id": "2a769b09-8481-4346-af9b-9cee62d77354",
             "name": "name",
             "visibility": "public",
             "type": {
@@ -25,7 +25,7 @@
             "is_derived_union": null
           },
           {
-            "id": "1615eeef-652b-4cbd-894e-17f875cb5d22",
+            "id": "db2a97df-a5c0-4e50-90cd-9af20ad92188",
             "name": "age",
             "visibility": "public",
             "type": {
@@ -42,7 +42,7 @@
         ],
         "operations": [
           {
-            "id": "9b7e7a81-4ef9-4dec-8933-f06f15b47b9c",
+            "id": "abf77f54-2c5f-4f34-860f-6d237f22c4d4",
             "name": "getName",
             "visibility": "public",
             "parameters": [],
@@ -68,7 +68,7 @@
         "visibility": "public",
         "attributes": [
           {
-            "id": "2bceb0ed-8af6-46f3-bdbd-163fee9fb0a1",
+            "id": "4468c713-b184-46d9-a1b4-445843afd436",
             "name": "street",
             "visibility": "public",
             "type": {
@@ -83,7 +83,7 @@
             "is_derived_union": null
           },
           {
-            "id": "d229755e-4954-4c7f-be90-8d943e1ac6b8",
+            "id": "4c937a52-b1ad-4eaa-815f-510c79d27b19",
             "name": "zipcode",
             "visibility": "public",
             "type": {
@@ -129,7 +129,7 @@
         "attributes": [],
         "operations": [
           {
-            "id": "01fd1af9-21db-45e3-b5d9-b30963bdd701",
+            "id": "59394f82-e86a-4c29-b946-20c9e1367ef2",
             "name": "getAge",
             "visibility": "public",
             "parameters": [],
@@ -156,6 +156,8 @@
         "id": "assoc1",
         "name": "PersonAddressAssociation",
         "visibility": "public",
+        "type": "association",
+        "direction": "undirected",
         "end1": {
           "idref": "end1"
         },
@@ -252,7 +254,7 @@
         ],
         "fragments": [
           {
-            "id": "6bd5d10a-cd58-4d62-a89b-267bfb7d24d9",
+            "id": "bf84ff0e-d9bf-4085-9149-ffb5c3868b5c",
             "covered": {
               "idref": "lifeline1"
             }
@@ -328,7 +330,7 @@
             }
           },
           {
-            "id": "c5419bdf-dbc3-419a-8bf6-02175ac7e545",
+            "id": "b2e69792-939b-4988-b10e-782d7ae60bf0",
             "covered": {
               "idref": "lifeline2"
             }
@@ -406,7 +408,7 @@
         }
       },
       {
-        "id": "e17b4161-ad6e-478c-94a2-81daf48db088",
+        "id": "f4290aa7-e69b-4a6e-a14d-f41a8ef44ceb",
         "name": null,
         "visibility": "public",
         "model": {
@@ -425,7 +427,7 @@
         }
       },
       {
-        "id": "1f98bb09-e8a5-4b0c-b0ca-ff1dec32ef15",
+        "id": "d32c08c3-e88d-4217-993f-74372ebced2d",
         "name": null,
         "visibility": "public",
         "model": {

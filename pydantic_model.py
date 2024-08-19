@@ -260,6 +260,8 @@ class UmlAssociationEnd(UmlElement):
 
 
 class UmlAssociation(UmlNamedElement):
+    type: UmlAssociationTypeEnum = UmlAssociationTypeEnum.ASSOCIATION
+    direction: UmlAssociationDirectionEnum = UmlAssociationDirectionEnum.UNDIRECTED
     end1: Union["UmlAssociationEnd", "UmlIdReference"]
     end2: Union["UmlAssociationEnd", "UmlIdReference"]
 
@@ -273,6 +275,8 @@ class UmlAssociation(UmlNamedElement):
 
 
 class UmlDirectedAssociation(UmlNamedElement):
+    type: UmlAssociationTypeEnum = UmlAssociationTypeEnum.ASSOCIATION
+    direction: UmlAssociationDirectionEnum = UmlAssociationDirectionEnum.DIRECTED
     source: Union["UmlAssociationEnd", "UmlIdReference"]
     target: Union["UmlAssociationEnd", "UmlIdReference"]
 
@@ -286,11 +290,11 @@ class UmlDirectedAssociation(UmlNamedElement):
 
 
 class UmlAggregation(UmlDirectedAssociation):
-    pass
+    type: UmlAssociationTypeEnum = UmlAssociationTypeEnum.AGGREGATION
 
 
 class UmlComposition(UmlDirectedAssociation):
-    pass
+    type: UmlAssociationTypeEnum = UmlAssociationTypeEnum.COMPOSITION
 
 
 class UmlDependency(UmlNamedElement):
@@ -449,11 +453,13 @@ class UmlModelElements(BaseModel):
     dataTypes: List[UmlDataType] = Field(default_factory=list)
     enumerations: List[UmlEnumeration] = Field(default_factory=list)
     primitiveTypes: List[UmlPrimitiveType] = Field(default_factory=list)
-    associations: List[UmlAssociation] = Field(default_factory=list)
+    associations: List[Union["UmlAssociation", "UmlDirectedAssociation"]] = Field(default_factory=list)
     generalizations: List[UmlGeneralization] = Field(default_factory=list)
     dependencies: List[UmlDependency] = Field(default_factory=list)
     realizations: List[UmlRealization] = Field(default_factory=list)
+    
     interactions: List[UmlInteraction] = Field(default_factory=list)
+
 
 
 

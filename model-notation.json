@@ -26,6 +26,22 @@
           ],
           "default": "public"
         },
+        "type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlAssociationTypeEnum"
+            }
+          ],
+          "default": "association"
+        },
+        "direction": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlAssociationDirectionEnum"
+            }
+          ],
+          "default": "undirected"
+        },
         "end1": {
           "anyOf": [
             {
@@ -55,6 +71,14 @@
       ],
       "title": "UmlAssociation",
       "type": "object"
+    },
+    "UmlAssociationDirectionEnum": {
+      "enum": [
+        "undirected",
+        "directed"
+      ],
+      "title": "UmlAssociationDirectionEnum",
+      "type": "string"
     },
     "UmlAssociationEnd": {
       "properties": {
@@ -119,6 +143,15 @@
       ],
       "title": "UmlAssociationEnd",
       "type": "object"
+    },
+    "UmlAssociationTypeEnum": {
+      "enum": [
+        "association",
+        "aggregation",
+        "composition"
+      ],
+      "title": "UmlAssociationTypeEnum",
+      "type": "string"
     },
     "UmlAttribute": {
       "properties": {
@@ -671,6 +704,78 @@
         "client"
       ],
       "title": "UmlDependency",
+      "type": "object"
+    },
+    "UmlDirectedAssociation": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "visibility": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlVisibilityEnum"
+            }
+          ],
+          "default": "public"
+        },
+        "type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlAssociationTypeEnum"
+            }
+          ],
+          "default": "association"
+        },
+        "direction": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/UmlAssociationDirectionEnum"
+            }
+          ],
+          "default": "directed"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlAssociationEnd"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Source"
+        },
+        "target": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UmlAssociationEnd"
+            },
+            {
+              "$ref": "#/$defs/UmlIdReference"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "source",
+        "target"
+      ],
+      "title": "UmlDirectedAssociation",
       "type": "object"
     },
     "UmlEnumeration": {
@@ -1250,7 +1355,14 @@
         },
         "associations": {
           "items": {
-            "$ref": "#/$defs/UmlAssociation"
+            "anyOf": [
+              {
+                "$ref": "#/$defs/UmlAssociation"
+              },
+              {
+                "$ref": "#/$defs/UmlDirectedAssociation"
+              }
+            ]
           },
           "title": "Associations",
           "type": "array"
